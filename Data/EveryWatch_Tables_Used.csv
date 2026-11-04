@@ -1,0 +1,60 @@
+Area,Draft table (_d),Published table,Used in,Mentions in repo (approx.),Notes
+Watches,tblWatch_d,tblWatch,Queries + Knowledge,141 / 82,Join: tblWatch.WatchListingDraftId = tblWatch_d.WatchId. Filter IsDeleted = 0 OR NULL on these two tables only. Stage first (B8).
+Reference numbers & models,,tblReferenceNumber,Queries + Knowledge,55,Watch side always goes through this table. Ref flags are not mutually exclusive.
+Reference numbers & models,,tblModel,Queries + Knowledge,19,
+Reference numbers & models,,tblManufacturer,Queries + Knowledge,28,CatalogId = tbl_CAT_Manufacturer_d.ManufacturerId (bridge to EWMaster).
+Reference numbers & models,tblReferenceNumberMSRP_d,tblReferenceNumberMSRP,Knowledge + Docs,3 / 4,App copy of retail prices (synced by ResyncCatalogRetailPriceToEW). EWMaster is the source of truth.
+Reference numbers & models,,tblAttributeMergeQueue,Knowledge + Docs,4,AttributeTypeId 2 = Model; 3 = ReferenceNumber.
+Enrichment,,tbl_RE_ReferenceEnrichment,Queries + Knowledge,28,EntityStatusId 2 = published.
+Enrichment,,tbl_RE_DataToFix,Queries + Knowledge,41,Multiple-ENR candidates. WatchId = draft id. No IsFixed filter.
+Enrichment,,tbl_RE_DiscardedWatch,Queries + Knowledge,31,Candidates for watches with no ENR. ~9.27M rows. Seek by WatchId.
+Enrichment,,TblWatchEnrichmentResults,Queries + Knowledge,16,Watches that got an ENR and how. WatchId = draft id.
+Enrichment,,tbl_RE_ReferenceEnrichmentMediaAsset,Queries + Knowledge,13,ENR images. IsPrimary = 1.
+Enrichment,,tbl_RE_EnrichmentRule,Docs,6,Global rules built by GlobalRuleSyncService.
+Enrichment,,tbl_RE_ReferenceEnrichmentType,Queries + Knowledge,4,EnrichmentTypeId 1-7.
+Enrichment,,tblManufacturerConfig,Docs,2,Per-brand image-match thresholds.
+Watch attributes,tblWatchToDialColor_d,tblWatchToDialColor,Queries + Knowledge,15 / 9,
+Watch attributes,tblWatchToCaseMaterial_d,tblWatchToCaseMaterial,Queries + Knowledge,11 / 5,
+Watch attributes,tblWatchToBezelColor_d,tblWatchToBezelColor,Queries,6 / 0,Published table not named in the repo yet; confirmed in ew-db DDL.
+Watch attributes,TblWatchToBraceletMaterial_D,TblWatchToBraceletMaterial,Queries + Knowledge,2 / 0,Published table not named in the repo yet; confirmed in ew-db DDL.
+Watch attributes,tblWatchToStrapColor_d,TblWatchToStrapColor,Not used yet,0,Exists in ew-db DDL.
+Watch attributes,TblWatchToDialMaterial_d,TblWatchToDialMaterial,Not used yet,0,Exists in ew-db DDL.
+Watch attributes,tblWatchToDialFinish_d,tblWatchtoDialFinish,Not used yet,0,Exists in ew-db DDL.
+Watch attributes,tblWatchToIndicesStyle_d,tblWatchToIndicesStyle,Not used yet,0,Exists in ew-db DDL.
+Watch attributes,tblWatchToIndicesEmbellishment_d,tblWatchToIndicesEmbellishment,Not used yet,0,Exists in ew-db DDL.
+Watch attributes,tblWatchToBezelEmbellishment_d,TblWatchToBezelEmbellishment,Not used yet,0,Exists in ew-db DDL.
+Watch attributes,TblWatchToCaseEmbellishment_d,TblWatchToCaseEmbellishment,Not used yet,0,Exists in ew-db DDL.
+Watch attributes,TblWatchToDialEmbellishment_d,TblWatchToDialEmbellishment,Not used yet,0,Exists in ew-db DDL.
+Attribute lookups,,tblColor,Queries + Knowledge,32,No _d version.
+Attribute lookups,,tblCaseMaterial,Queries + Knowledge,15,No _d version.
+Attribute lookups,,TblMaterial,Knowledge,4,No _d version. Also used for bracelet material.
+Images,tblMediaAsset_d,tblMediaAsset,Queries + Knowledge,36 / 7,No IsDeleted filter. Filter IsPrimary = 1.
+Sources & auctions,,tblInfoSource,Queries + Knowledge,7,EventTypeId 1 = Auction; 2 = Marketplace.
+Sources & auctions,tblAuctionLot_d,tblAuctionLot,Knowledge,2 / 1,LotStatusId enum in DB_Conventions.md section 6.
+Sources & auctions,tblEvent_d,tblEvent,Knowledge,1 / 1,
+History / audit,,tblPriceHistory,Knowledge,3,~158M rows. Audit table and live website read source.
+History / audit,,tblStatusLog,Knowledge,2,~533M rows. Only history of why a watch is in its current status.
+History / audit,,tblLog,Knowledge,2,~289M rows. Sync error messages per watch.
+History / audit,,StoreProcedureError,Knowledge,1,~21M rows. First place to check a sync failure.
+Synonyms,,tblManufacturerSynonym,Knowledge,1,Forward lookup and unmatched-values queue. Never write to directly.
+Synonyms,,tblModelSynonym,Knowledge,1,
+Synonyms,,tblReferenceNumberSynonym,Knowledge,1,
+Synonyms,,tblColorSynonym,Knowledge,3,
+Synonyms,,TblMaterialSynonym,Knowledge,1,
+Synonyms,,tblCaseMaterialSynonym,Knowledge,1,
+Synonyms,,tblBraceletMaterialSynonym,Knowledge,1,
+Synonyms,,tblClaspMaterialSynonym,Knowledge,1,
+Synonyms,,tblCaseSizeSynonym,Knowledge,1,
+Synonyms,,tblMovementSynonym,Knowledge,1,
+Synonyms,,tblCurrencySynonym,Knowledge,1,
+Synonyms,,tblFeatureSynonyms,Knowledge,1,Plural name; catalog target is tblFeatures.
+Synonyms,,tblComplicationSynonym,Knowledge,1,
+Synonyms,,tblConditionSynonym,Knowledge,1,
+Synonyms,,tblNewnessSynonym,Knowledge,1,
+Synonyms,,tblUnitSynonym,Knowledge,1,
+Synonyms,,TblSynonymMasterLinkingQueue,Knowledge,2,Cross-attribute moderator queue; not a synonym table itself.
+Raw / crawl layer,,tblRawWatch,Knowledge,1,Draft layer.
+Raw / crawl layer,,MAC_Sources / MAC_Auctions / MAC_Watches / MAC_Artworks,Knowledge,1 each,Crawl DB via linked server [EC2AMAZ-K9AGUNN]. SourceDataType on MAC_Sources.
+Unclear / scratch,,tbl_RE_Random200Images,One-off script (Query5.sql),5,Created by the script; tbl_RE_ prefix suggests EveryWatch.
+Unclear / scratch,,tbl_AG_CandidateVariation / tbl_AG_CandidateVariationMember,Query1.sql only,2 each,Database not confirmed.
+Unclear / scratch,,tbl_RE_Core_EnrichmentTest_delete_me,Scratch,2,Scratch table; do not use.

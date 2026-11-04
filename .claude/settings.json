@@ -1,0 +1,55 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__everywatch__whoami",
+      "mcp__everywatch__list_access",
+      "mcp__everywatch__sql__describe",
+      "mcp__everywatch__search__mapping",
+      "mcp__everywatch__search__count",
+      "mcp__everywatch__search__get_document",
+      "mcp__claude_ai_Atlassian_Rovo__getJiraIssue",
+      "mcp__claude_ai_Atlassian_Rovo__searchJiraIssuesUsingJql",
+      "mcp__claude_ai_Atlassian_Rovo__getJiraIssueRemoteIssueLinks",
+      "mcp__claude_ai_Atlassian_Rovo__getTransitionsForJiraIssue",
+      "mcp__claude_ai_Atlassian_Rovo__getVisibleJiraProjects",
+      "mcp__claude_ai_Atlassian_Rovo__getConfluencePage",
+      "mcp__claude_ai_Atlassian_Rovo__searchConfluenceUsingCql",
+      "mcp__claude_ai_Atlassian_Rovo__search"
+    ],
+    "deny": [
+      "mcp__everywatch__sql__execute_procedure",
+      "mcp__everywatch__search__write_document",
+      "Bash(sqlcmd:*)",
+      "Bash(bcp:*)",
+      "Bash(osql:*)",
+      "Write(D:\\EW\\EWScripts\\**)",
+      "Edit(D:\\EW\\EWScripts\\**)",
+      "Write(D:\\EW\\ew-db\\EveryWatchDDL\\**)",
+      "Edit(D:\\EW\\ew-db\\EveryWatchDDL\\**)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -n \"$(git status --porcelain -- Feedback/session-corrections-log.md 2>/dev/null)\" ]; then printf '%s' '{\"systemMessage\": \"Feedback/session-corrections-log.md has new, uncommitted entries from this session. Run /retro-feedback to review them and propose promoting recurring ones into Rules/ or Knowledge/.\"}'; fi",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '%s' 'CORRECTION LOG REMINDER: if this user message corrects something Claude just did wrong or redirects Claude to a better approach, append an entry to Feedback/session-corrections-log.md in the repo root (what Claude did wrong, what the user said, the right way; numbered, continuing the last entry number) BEFORE continuing, without asking, and say in one line that it was logged. Corrections only, not every change. Never promote an entry into Rules/ or Knowledge/ without the users go-ahead (that is /retro-feedback).'",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
