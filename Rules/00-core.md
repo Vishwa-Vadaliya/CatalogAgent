@@ -51,6 +51,24 @@ involved a judgment call.
     says yes in reply to that specific ask; if they say no or don't answer, hand over the script.
     Ask again for each new query — one approval doesn't cover later ones. Never run writes or
     procedures (`INSERT`/`UPDATE`/`DELETE`/DDL/`execute_procedure`) through the MCP.
+  - **Carve-out — `/log-catalog-change` only:** that skill may bundle the lookups for **one** logged
+    change (or one batch) into a single approval, provided every query is shown **verbatim** in that
+    one ask. It covers only that skill's fixed-shape record lookups, and only for the change being
+    logged — the next change asks again. It does not extend to any other skill or query.
+- **Never `git commit` or `git push` without being asked.** Do the work, then stop and say it's
+  ready — leave the changes in the working tree for the user to review.
+  - This holds for every repo, including this one, and for any route to the same effect: the `git`
+    CLI, a git MCP tool, a GUI, or a script that commits as a side effect.
+  - **One approval covers one action.** "Commit and push this" authorizes *that* commit and push,
+    not the next one. Ask again each time, however small the follow-up change.
+  - Don't stage-and-commit "to keep things tidy", to checkpoint before a risky edit, or because a
+    task feels finished. Finishing work is not a trigger to publish it.
+  - Creating or changing a remote, force-pushing, branching, tagging, rewriting history, reverting
+    and merging follow the same rule — ask first.
+  - Allowed without asking: read-only inspection (`git status`, `git diff`, `git log`, `git show`)
+    and adding to `.gitignore` to keep a secret or artefact out of a commit.
+  - A push is irreversible in practice — it is visible to others the moment it lands, and deleting
+    it afterwards doesn't un-publish it. Treat it as the user's call, every time.
 - When asked to diagnose, don't change the SP or file — give read-only queries and ask for results.
 - Ask, don't assume, when a definition is unclear.
 - The user can't create SPs in EveryWatch and prefers not to in EWMaster → give plain scripts in parts.

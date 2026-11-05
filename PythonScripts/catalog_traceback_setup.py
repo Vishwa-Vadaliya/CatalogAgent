@@ -6,11 +6,18 @@ What the log records: every manual change made to the catalog —
   * a catalog row / model / enrichment deleted
   * a duplicate merged into a surviving row
 
+Layout: a two-row header. Row 1 groups the columns into blocks, row 2 holds the column
+names. Only the columns relevant to a change get filled; the rest stay empty.
+
+    catalog deleted      -> CatalogId, EnrichmentId        Field = CatalogId
+    reference renamed    -> CatalogId, ReferenceNumber,
+                            EnrichmentId                   Field = ReferenceNumber
+    model renamed/deleted-> ModelId, ModelName, CatalogId  Field = ModelName
+
 Dry run by default. Nothing is written without --write.
 
     python catalog_traceback_setup.py                 # show the plan
     python catalog_traceback_setup.py --write         # apply it
-    python catalog_traceback_setup.py --tab ChangeLog --write
 
 Credentials come from GOOGLE_APPLICATION_CREDENTIALS (see PythonScripts/google_auth.py).
 """
@@ -26,57 +33,80 @@ from google_auth import credentials, SHEETS_RW  # noqa: E402
 
 SPREADSHEET_ID = "1l23GqhRziHUNjeijLtxVTAZurtdhjPTKNkbV5xTvqEE"
 
-# (header, width_px, note shown on the header cell)
+# group label -> (dark colour for the group row, light tint for the header row)
+GROUP_COLOURS = {
+    "LOG ENTRY":  ((0.35, 0.37, 0.40), (0.90, 0.91, 0.92)),
+    "CATALOG":    ((0.11, 0.31, 0.49), (0.85, 0.90, 0.95)),
+    "MODEL":      ((0.11, 0.40, 0.33), (0.85, 0.93, 0.91)),
+    "CHANGE":     ((0.35, 0.22, 0.45), (0.92, 0.88, 0.95)),
+    "REVIEW":     ((0.48, 0.31, 0.08), (0.98, 0.92, 0.80)),
+}
+
+# (group, header, width_px, note shown on the header cell)
 COLUMNS = [
-    ("Date", 100,
+    ("LOG ENTRY", "Date", 100,
      "Date the change was made in the catalog (yyyy-mm-dd)."),
-    ("ChangedBy", 110,
+    ("LOG ENTRY", "ChangedBy", 110,
      "Who made the change."),
-    ("Brand", 130,
+    ("LOG ENTRY", "Brand", 130,
      "Manufacturer name, so the log can be filtered by brand."),
-    ("EntityType", 110,
-     "What this row is about: Catalog, Model or Enrichment. "
-     "Determines which of the three Id columns identifies the row."),
-    ("CatalogId", 100,
-     "tbl_CAT_Catalog_d.CatalogId. Fill for EntityType = Catalog."),
-    ("ModelId", 90,
-     "tbl_CAT_Model_d.ModelId. Fill for EntityType = Model, or as context for a catalog row."),
-    ("EnrichmentId", 110,
-     "tbl_RE_ReferenceEnrichment.ReferenceEnrichmentId. Fill for EntityType = Enrichment."),
-    ("Action", 100,
+
+    ("CATALOG", "CatalogId", 100,
+     "tbl_CAT_Catalog_d.CatalogId. Fill for any change to a catalog row, and as context "
+     "for a model change."),
+    ("CATALOG", "ReferenceNumber", 170,
+     "The reference number on that catalog row, as it was BEFORE the change. "
+     "Leave blank for a model-only change. Plain text."),
+    ("CATALOG", "EnrichmentId", 110,
+     "tbl_RE_ReferenceEnrichment.ReferenceEnrichmentId for that catalog row."),
+
+    ("MODEL", "ModelId", 90,
+     "tbl_CAT_Model_d.ModelId. Fill for a model change."),
+    ("MODEL", "ModelName", 170,
+     "The model name, as it was BEFORE the change. Leave blank for a catalog-only change. "
+     "Plain text."),
+
+    ("CHANGE", "Action", 100,
      "Renamed, Deleted or Merged."),
-    ("Field", 130,
-     "Which field changed: ReferenceNumber or ModelName. Leave blank for a plain Deleted."),
-    ("OldValue", 200,
-     "The value BEFORE the change. Always fill for Renamed and Merged. "
-     "Plain text, so refs like 5711/1A-010 and B1/M are kept exactly as typed."),
-    ("NewValue", 200,
-     "The value AFTER the change. Fill for Renamed. Plain text."),
-    ("MergedIntoId", 110,
-     "For Merged / duplicate deletes: the id of the row that SURVIVED, "
-     "i.e. where this record went. Answers 'where did it go'."),
-    ("Reason", 300,
+    ("CHANGE", "Field", 140,
+     "What the change was to: ReferenceNumber, ModelName, or CatalogId when a whole "
+     "catalog row was deleted."),
+    ("CHANGE", "OldValue", 190,
+     "Value BEFORE the change. Fill for Renamed and Merged; blank for a plain Deleted, "
+     "where the identifying columns above already say what went. Plain text, so refs like "
+     "5711/1A-010 and B1/M are kept exactly as typed."),
+    ("CHANGE", "NewValue", 190,
+     "Value AFTER the change. Fill for Renamed. Plain text."),
+    ("CHANGE", "MergedIntoId", 110,
+     "For Merged / duplicate deletes: the id of the row that SURVIVED, i.e. where this "
+     "record went. Answers 'where did it go'."),
+    ("CHANGE", "Reason", 300,
      "Why the change was made, in words. e.g. 'caseback number, not a reference'."),
-    ("Ticket", 110,
-     "Jira key or source sheet that triggered the change."),
-    ("Status", 110,
-     "Review decision: Pending, Accepted or Rejected."),
+
+    ("REVIEW", "Accept/Reject", 130,
+     "The reviewer's decision on this change: Pending until someone reviews it, then "
+     "Accepted or Rejected."),
 ]
 
 DROPDOWNS = {
-    "EntityType": ["Catalog", "Model", "Enrichment"],
     "Action": ["Renamed", "Deleted", "Merged"],
-    "Field": ["ReferenceNumber", "ModelName"],
-    "Status": ["Pending", "Accepted", "Rejected"],
+    "Field": ["ReferenceNumber", "ModelName", "CatalogId"],
+    "Accept/Reject": ["Pending", "Accepted", "Rejected"],
 }
 
 # Columns that must stay literal text. A reference like "B1/M" or "5711/1A-010"
 # is otherwise silently reinterpreted by Sheets as a date or a fraction.
-TEXT_COLUMNS = ["OldValue", "NewValue"]
+TEXT_COLUMNS = ["ReferenceNumber", "ModelName", "OldValue", "NewValue"]
 DATE_COLUMNS = ["Date"]
 
-HEADER_BG = {"red": 0.17, "green": 0.24, "blue": 0.31}
-HEADER_FG = {"red": 1.0, "green": 1.0, "blue": 1.0}
+HEADER_ROW = 1          # 0-based: row 2 holds the column names
+DATA_START = 2          # 0-based: data begins on row 3
+WHITE = {"red": 1.0, "green": 1.0, "blue": 1.0}
+DARK_TEXT = {"red": 0.13, "green": 0.13, "blue": 0.13}
+
+
+def rgb(t):
+    return {"red": t[0], "green": t[1], "blue": t[2]}
 
 
 def col_letter(idx):
@@ -85,6 +115,16 @@ def col_letter(idx):
         n, r = divmod(n - 1, 26)
         s = chr(65 + r) + s
     return s
+
+
+def group_spans():
+    """[(group, start_idx, end_idx_exclusive)] in column order."""
+    spans, start = [], 0
+    for i in range(1, len(COLUMNS) + 1):
+        if i == len(COLUMNS) or COLUMNS[i][0] != COLUMNS[start][0]:
+            spans.append((COLUMNS[start][0], start, i))
+            start = i
+    return spans
 
 
 def svc():
@@ -103,11 +143,11 @@ def tab_meta(service, tab):
 
 
 def existing_rows(service, tab):
-    """How many data rows the tab already holds (so we never clobber real data)."""
+    """Rows the tab already holds, beyond the two header rows."""
     q = "'" + tab.replace("'", "''") + "'"
     vals = service.spreadsheets().values().get(
-        spreadsheetId=SPREADSHEET_ID, range=f"{q}!A1:Z").execute().get("values", [])
-    return max(len(vals) - 1, 0), vals[0] if vals else []
+        spreadsheetId=SPREADSHEET_ID, range=f"{q}!A1:ZZ").execute().get("values", [])
+    return max(len(vals) - 2, 0), vals
 
 
 def backup_tab(service, tab, path):
@@ -122,52 +162,69 @@ def backup_tab(service, tab, path):
 
 
 def clear_tab(service, sheet_id, tab):
-    """Wipe values, formats, notes and validation so no trace of the old layout is left."""
+    """Wipe values, formats, notes, validation and merges — no trace of the old layout."""
     q = "'" + tab.replace("'", "''") + "'"
     service.spreadsheets().values().clear(
         spreadsheetId=SPREADSHEET_ID, range=f"{q}!A1:ZZ", body={}).execute()
     service.spreadsheets().batchUpdate(spreadsheetId=SPREADSHEET_ID, body={"requests": [
-        {"updateCells": {
-            "range": {"sheetId": sheet_id},
-            "fields": "userEnteredFormat,note,dataValidation"}},
+        {"updateCells": {"range": {"sheetId": sheet_id},
+                         "fields": "userEnteredFormat,note,dataValidation"}},
         {"unmergeCells": {"range": {"sheetId": sheet_id}}},
     ]}).execute()
 
 
 def build_requests(sheet_id, ncols):
-    """Formatting requests: header style, freeze, widths, notes, dropdowns, number formats."""
     reqs = []
-    names = [c[0] for c in COLUMNS]
+    names = [c[1] for c in COLUMNS]
 
-    # header row: bold, white on dark, centred, wrapped
-    reqs.append({"repeatCell": {
-        "range": {"sheetId": sheet_id, "startRowIndex": 0, "endRowIndex": 1,
-                  "startColumnIndex": 0, "endColumnIndex": ncols},
-        "cell": {"userEnteredFormat": {
-            "backgroundColor": HEADER_BG,
-            "horizontalAlignment": "CENTER",
-            "verticalAlignment": "MIDDLE",
-            "wrapStrategy": "WRAP",
-            "textFormat": {"bold": True, "foregroundColor": HEADER_FG, "fontSize": 10}}},
-        "fields": ("userEnteredFormat(backgroundColor,horizontalAlignment,"
-                   "verticalAlignment,wrapStrategy,textFormat)")}})
+    # --- row 1: group bands, merged across each block, white on the group colour
+    for group, start, end in group_spans():
+        dark, _ = GROUP_COLOURS[group]
+        if end - start > 1:
+            reqs.append({"mergeCells": {
+                "range": {"sheetId": sheet_id, "startRowIndex": 0, "endRowIndex": 1,
+                          "startColumnIndex": start, "endColumnIndex": end},
+                "mergeType": "MERGE_ALL"}})
+        reqs.append({"repeatCell": {
+            "range": {"sheetId": sheet_id, "startRowIndex": 0, "endRowIndex": 1,
+                      "startColumnIndex": start, "endColumnIndex": end},
+            "cell": {"userEnteredFormat": {
+                "backgroundColor": rgb(dark),
+                "horizontalAlignment": "CENTER", "verticalAlignment": "MIDDLE",
+                "textFormat": {"bold": True, "foregroundColor": WHITE, "fontSize": 10}}},
+            "fields": ("userEnteredFormat(backgroundColor,horizontalAlignment,"
+                       "verticalAlignment,textFormat)")}})
 
-    # freeze the header
+    # --- row 2: column names, dark text on the light tint of the same group
+    for group, start, end in group_spans():
+        _, light = GROUP_COLOURS[group]
+        reqs.append({"repeatCell": {
+            "range": {"sheetId": sheet_id, "startRowIndex": HEADER_ROW, "endRowIndex": HEADER_ROW + 1,
+                      "startColumnIndex": start, "endColumnIndex": end},
+            "cell": {"userEnteredFormat": {
+                "backgroundColor": rgb(light),
+                "horizontalAlignment": "CENTER", "verticalAlignment": "MIDDLE",
+                "wrapStrategy": "WRAP",
+                "textFormat": {"bold": True, "foregroundColor": DARK_TEXT, "fontSize": 10}}},
+            "fields": ("userEnteredFormat(backgroundColor,horizontalAlignment,"
+                       "verticalAlignment,wrapStrategy,textFormat)")}})
+
+    # freeze both header rows
     reqs.append({"updateSheetProperties": {
-        "properties": {"sheetId": sheet_id, "gridProperties": {"frozenRowCount": 1}},
+        "properties": {"sheetId": sheet_id, "gridProperties": {"frozenRowCount": 2}},
         "fields": "gridProperties.frozenRowCount"}})
 
     # column widths
-    for i, (_, width, _) in enumerate(COLUMNS):
+    for i, (_, _, width, _) in enumerate(COLUMNS):
         reqs.append({"updateDimensionProperties": {
             "range": {"sheetId": sheet_id, "dimension": "COLUMNS",
                       "startIndex": i, "endIndex": i + 1},
             "properties": {"pixelSize": width}, "fields": "pixelSize"}})
 
-    # a note on each header cell documenting the column
-    for i, (_, _, note) in enumerate(COLUMNS):
+    # a note on each column-name cell documenting the column
+    for i, (_, _, _, note) in enumerate(COLUMNS):
         reqs.append({"repeatCell": {
-            "range": {"sheetId": sheet_id, "startRowIndex": 0, "endRowIndex": 1,
+            "range": {"sheetId": sheet_id, "startRowIndex": HEADER_ROW, "endRowIndex": HEADER_ROW + 1,
                       "startColumnIndex": i, "endColumnIndex": i + 1},
             "cell": {"note": note}, "fields": "note"}})
 
@@ -175,18 +232,17 @@ def build_requests(sheet_id, ncols):
     for name, values in DROPDOWNS.items():
         i = names.index(name)
         reqs.append({"setDataValidation": {
-            "range": {"sheetId": sheet_id, "startRowIndex": 1,
+            "range": {"sheetId": sheet_id, "startRowIndex": DATA_START,
                       "startColumnIndex": i, "endColumnIndex": i + 1},
-            "rule": {
-                "condition": {"type": "ONE_OF_LIST",
-                              "values": [{"userEnteredValue": v} for v in values]},
-                "strict": True, "showCustomUi": True}}})
+            "rule": {"condition": {"type": "ONE_OF_LIST",
+                                   "values": [{"userEnteredValue": v} for v in values]},
+                     "strict": True, "showCustomUi": True}}})
 
-    # plain text on the value columns, so refs are never reinterpreted
+    # plain text on every column that can hold a reference or a name
     for name in TEXT_COLUMNS:
         i = names.index(name)
         reqs.append({"repeatCell": {
-            "range": {"sheetId": sheet_id, "startRowIndex": 1,
+            "range": {"sheetId": sheet_id, "startRowIndex": DATA_START,
                       "startColumnIndex": i, "endColumnIndex": i + 1},
             "cell": {"userEnteredFormat": {"numberFormat": {"type": "TEXT"}}},
             "fields": "userEnteredFormat.numberFormat"}})
@@ -194,15 +250,22 @@ def build_requests(sheet_id, ncols):
     for name in DATE_COLUMNS:
         i = names.index(name)
         reqs.append({"repeatCell": {
-            "range": {"sheetId": sheet_id, "startRowIndex": 1,
+            "range": {"sheetId": sheet_id, "startRowIndex": DATA_START,
                       "startColumnIndex": i, "endColumnIndex": i + 1},
             "cell": {"userEnteredFormat": {
                 "numberFormat": {"type": "DATE", "pattern": "yyyy-mm-dd"}}},
             "fields": "userEnteredFormat.numberFormat"}})
 
-    # filter over the whole header
+    # vertical rule between the groups, so the blocks read apart
+    for _, start, end in group_spans()[1:]:
+        reqs.append({"updateBorders": {
+            "range": {"sheetId": sheet_id, "startRowIndex": 0, "endRowIndex": 1000,
+                      "startColumnIndex": start, "endColumnIndex": start + 1},
+            "left": {"style": "SOLID_MEDIUM", "color": {"red": 0.25, "green": 0.25, "blue": 0.25}}}})
+
+    # filter over the column-name row
     reqs.append({"setBasicFilter": {"filter": {
-        "range": {"sheetId": sheet_id, "startRowIndex": 0,
+        "range": {"sheetId": sheet_id, "startRowIndex": HEADER_ROW,
                   "startColumnIndex": 0, "endColumnIndex": ncols}}}})
     return reqs
 
@@ -223,57 +286,70 @@ def main():
     sheet_id = props["sheetId"]
     ncols = len(COLUMNS)
 
-    nrows, current_header = existing_rows(service, args.tab)
+    nrows, vals = existing_rows(service, args.tab)
 
     print(f"spreadsheet : Catalog Traceback ({SPREADSHEET_ID})")
     print(f"tab         : {args.tab!r} (gid {sheet_id})")
-    print(f"existing    : {nrows} data row(s), {len(current_header)} header cell(s)")
-    if current_header:
-        print(f"              current header: {current_header}")
+    print(f"existing    : {nrows} data row(s) below the header")
+    for i, row in enumerate(vals[:2], 1):
+        print(f"              row {i}: {row}")
     print()
-    print(f"planned header ({ncols} columns):")
-    for i, (name, width, note) in enumerate(COLUMNS):
-        dd = DROPDOWNS.get(name)
-        extra = []
-        if dd:
-            extra.append("dropdown: " + "/".join(dd))
-        if name in TEXT_COLUMNS:
-            extra.append("plain text")
-        if name in DATE_COLUMNS:
-            extra.append("date yyyy-mm-dd")
-        tail = ("   [" + "; ".join(extra) + "]") if extra else ""
-        print(f"  {col_letter(i):>2}  {name:<13} {width:>4}px{tail}")
+
+    spans = group_spans()
+    print(f"planned layout ({ncols} columns, 2 header rows):\n")
+    print("  row 1  " + " | ".join(
+        f"{g} ({col_letter(s)}:{col_letter(e - 1)})" for g, s, e in spans))
+    print()
+    for group, start, end in spans:
+        print(f"  [{group}]")
+        for i in range(start, end):
+            name = COLUMNS[i][1]
+            extra = []
+            if name in DROPDOWNS:
+                extra.append("dropdown: " + "/".join(DROPDOWNS[name]))
+            if name in TEXT_COLUMNS:
+                extra.append("plain text")
+            if name in DATE_COLUMNS:
+                extra.append("date yyyy-mm-dd")
+            tail = ("   [" + "; ".join(extra) + "]") if extra else ""
+            print(f"     {col_letter(i):>2}  {name:<16}{tail}")
+    print()
 
     if nrows and not args.force:
-        print(f"\nREFUSING: {args.tab!r} already holds {nrows} data row(s).")
-        print("Rebuilding would overwrite the header above existing data.")
-        print("Re-run with --force only if you are sure, or pick an empty --tab.")
+        print(f"REFUSING: {args.tab!r} already holds {nrows} data row(s).")
+        print("Rebuilding would overwrite them. Re-run with --force only if you are sure.")
         return 1
 
     if not args.write:
-        print("\nDRY RUN — nothing written. Re-run with --write to apply.")
+        print("DRY RUN — nothing written. Re-run with --write to apply.")
         return 0
 
     from datetime import datetime
     stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     n, path = backup_tab(service, args.tab, f"{args.backup_dir}/{args.tab}_before_{stamp}.csv")
-    print(f"\nbacked up {n} existing row(s) -> {path}")
+    print(f"backed up {n} existing row(s) -> {path}")
 
     clear_tab(service, sheet_id, args.tab)
     print("cleared the tab (values, formats, notes, validation, merges)")
 
+    group_row, header_row = [], []
+    for group, start, end in spans:
+        group_row.append(group)
+        group_row.extend([""] * (end - start - 1))
+    header_row = [c[1] for c in COLUMNS]
+
     service.spreadsheets().values().update(
         spreadsheetId=SPREADSHEET_ID,
-        range=f"'{args.tab}'!A1:{col_letter(ncols - 1)}1",
+        range=f"'{args.tab}'!A1:{col_letter(ncols - 1)}2",
         valueInputOption="RAW",
-        body={"values": [[c[0] for c in COLUMNS]]}).execute()
-    print(f"\nwrote header: {ncols} cells")
+        body={"values": [group_row, header_row]}).execute()
+    print(f"wrote 2 header rows: {ncols} columns")
 
     service.spreadsheets().batchUpdate(
         spreadsheetId=SPREADSHEET_ID,
         body={"requests": build_requests(sheet_id, ncols)}).execute()
-    print("applied: header style, frozen row, widths, header notes, "
-          "dropdowns, text/date formats, filter")
+    print("applied: group bands, merges, header style, frozen rows, widths, notes, "
+          "dropdowns, text/date formats, group borders, filter")
     print(f"\nDONE -> https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/edit#gid={sheet_id}")
     return 0
 

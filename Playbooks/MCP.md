@@ -30,6 +30,24 @@ The approval rule in full (A1):
 4. Ask again for the next query — one approval never covers a later one.
 5. If they say no or don't answer, hand over the `.sql` file instead.
 
+### What the SQL parser will not accept
+
+Confirmed on live runs, not from docs:
+
+- **`AND` is rejected everywhere** — in `WHERE` *and* in `JOIN ... ON` (*"the function AND is not
+  allowed here"*). One condition per query. A filter you can't express, you apply yourself by
+  returning the column and picking from the rows.
+- A trailing `;` is rejected.
+- Because compound filters are impossible, a single-condition query can be far broader than
+  intended — so the **500-row cap** is a live risk. A truncated result looks exactly like "no such
+  record". Compare the rows you got against what you expected, and say so if you are at the cap.
+
+Hand the user a `.sql` file to run themselves when a query genuinely needs more than one condition.
+
+**One carve-out — `/log-catalog-change`:** that skill may bundle the lookups for a single logged
+change into one approval, as long as every query is shown verbatim in that ask (`Rules/00-core.md`
+A1). Nothing else bundles.
+
 Anything that writes is handed to the user to run themselves, always, even if they say "go ahead".
 
 ## Atlassian — Jira and Confluence

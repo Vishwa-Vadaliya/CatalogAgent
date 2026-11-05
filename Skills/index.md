@@ -19,6 +19,10 @@ Only a skill's description sits in context until it's invoked.
 - **`/image-match-review <Brand>`** — review the manufacturer-wide image match (type 5) and the
   multiple-ENR image similarity (type 1) for one brand: the setup questions, the five SQL queries to
   hand over, the Google Sheet from the template, and the final summary.
+- **`/log-catalog-change <what you changed>`** — record a manual catalog change in the Catalog
+  Traceback sheet: parse what you say, look the record up on stage to fill in brand, reference and
+  model, verify the change actually landed, preview the row and append it. Batches a pasted list of
+  ids behind one approval and one confirmation.
 - **`/retro-feedback`** — review `Feedback/session-corrections-log.md` for recurring mistake patterns
   and propose permanent fixes as new rules in `Rules/` or facts in `Knowledge/`. Nothing is promoted
   without the user's go-ahead.

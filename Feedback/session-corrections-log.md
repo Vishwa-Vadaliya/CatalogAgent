@@ -324,3 +324,49 @@ redirects (where you steered the approach, but nothing was actually broken).
     Right way: when a plan moves or copies a repo, list the source's folders one by one and give each
     an explicit destination — including the ones that look empty or inactive — instead of designing
     only the parts the new feature needs.
+
+37. **Committed and pushed to git without being asked**
+    After the first push, which you did ask for, I went on to commit and push twice more on my own
+    — `8ff53eb` (the credentials migration) and `fb0273f` (the Sheet2 structure) — treating the
+    initial "commit this code and push it" as standing permission for the rest of the session. You
+    said: _"Also add one rule, without asking the user never commit or push the changes to the git"_
+    Right way: a commit or push is a separate, deliberate action the user triggers each time.
+    Finish the work, say it is ready, and leave it staged or uncommitted until asked. Approval for
+    one push never carries to the next.
+
+38. **Added columns the task didn't call for, one of them redundant with another column**
+    In the Catalog Traceback structure I added `EntityType` (Catalog/Model/Enrichment) alongside
+    `Field` (ReferenceNumber/ModelName) — two columns encoding the same thing — plus a `Ticket`
+    column nobody asked for. You said: _"the entity type column is just useless, because we are
+    already having the field column, and in that reference number and model name is already there
+    ... The ticket column is useless, we don't need it."_
+    Right way (A7): propose the columns the described need actually requires, and check a new column
+    against the ones already there before adding it. `Field` already identified the entity; adding
+    a third value to it (`CatalogId`) covers deletes without a second column. When a column is
+    offered beyond the ask, flag it as optional rather than building it into the design.
+
+39. **Appended sheet rows with INSERT_ROWS, which stripped the dropdowns and text formats**
+    `catalog_traceback_log.py` appended with `insertDataOption="INSERT_ROWS"`. That inserts fresh
+    rows, which do not inherit the data validation and number formats applied to the original range,
+    so every logged row landed without its `Action` / `Field` / `Accept/Reject` dropdowns and without
+    the TEXT format on `ReferenceNumber` / `ModelName` / `OldValue` / `NewValue` — and pushed the
+    formatted rows down. You said: _"Also one more thing keep the dropdowns, why did you removed it
+    fro the sheet?"_
+    Right way: append with the default `OVERWRITE` option so the write lands in existing grid rows
+    that already carry the formatting. More generally — when a script writes into a sheet whose
+    value is partly its formatting, verify the formatting survived the write, not just the values.
+    I checked the written values and the header, and never re-checked validation.
+
+40. **Built the skill to ask dense multi-part questions, and to verify through MCP without asking**
+    The `/log-catalog-change` skill asked everything in one packed message — parsed-field table,
+    verbatim SQL and the question together — and treated the database lookup as a required step that
+    only needed approval to *run*, never asking whether the user wanted verification at all. You
+    said: _"in the skill ask the questions like simple and one by one don't complicate the things.
+    And answer it in proper simple and easy way. Also for the verification step through mcp, ask the
+    user for it, if it want to do then only do it or else just write it into the sheet directly ...
+    try to ask the questions in mcq type only the way you generally asks and keep type something as
+    last option"_
+    Right way: one question at a time, as multiple choice with a free-text option last, and short
+    plain answers between them. Verification is the user's choice, not a fixed step — ask whether to
+    check the database, and if they say no, write the row straight to the sheet. Don't show SQL
+    unless they have asked for the check.
