@@ -370,3 +370,124 @@ redirects (where you steered the approach, but nothing was actually broken).
     plain answers between them. Verification is the user's choice, not a fixed step — ask whether to
     check the database, and if they say no, write the row straight to the sheet. Don't show SQL
     unless they have asked for the check.
+
+41. **Wrote 45 rows into the sheet and left them badly formatted**
+    After migrating Sheet1 into Sheet2 I checked the values, the dropdowns and the number formats,
+    and stopped there. Every column was centre-aligned — including Brand, ReferenceNumber, OldValue,
+    NewValue and the long Reason text — and there was no row banding, so 45 rows were hard to read.
+    You said: _"Do the proper formatting in the sheet. The sheet should always be properly
+    formatted"_
+    Right way: a sheet the team reads is not finished when the values are right. Text columns are
+    left-aligned, id and status columns centred, long text wrapped, and rows banded once there are
+    more than a handful. Apply the full formatting as part of writing the data, not as a later fix,
+    and keep it in the repeatable script so every future write lands formatted.
+
+42. **Missed the "verify a catalog field" task family, and would have answered it from the DB alone**
+    My task-landscape review grouped the team's work into 12 families and never identified the most
+    direct ask of all: _"here is a CatalogId / EnrichmentId — is this ReferenceNumber correct?"_,
+    and the same question for ModelName, dial colour, case material and any other catalog field.
+    Worse, with no route for it the agent would have pulled the row through the MCP and then either
+    restated what the database says (which is not an answer — the database is the thing under
+    question) or asserted a verdict from its own memory of watch references, which is exactly the
+    kind of detail a model invents confidently. You said: _"You cannot just say by looking it into
+    the DB that it is correct or not. In such cases, you need to do the web search, or you might see
+    it on the EveryWatch website or say open search. So find it in the web and do proper
+    investigation and tell that now it is correct or it is incorrect and what correct value it
+    should have. This is not just about reference number, but about model name, dial, color, case
+    setting. If any person asks you to correct the field of the catalog, any field, whether it be
+    anything, then you should be able to do it."_
+    Right way: the database read establishes *what we hold*, never *whether it is right*. A field
+    verdict needs external ground truth — manufacturer site or official catalogue, auction-house lot
+    listings, the specialist sources, and the EveryWatch site / OpenSearch index as a cross-check —
+    gathered before any verdict is given. The answer is correct / incorrect / cannot determine, with
+    the value it should be, the evidence behind it, and no verdict stated from memory. Any catalog
+    field is in scope, not just reference numbers.
+
+43. **Assigned Rolex nicknames from the reference number alone, without checking the catalog image**
+    What Claude did: mapped every Rolex catalog row to a nickname using only `ReferenceNumber`, and
+    marked 699 rows "needs dial check" as a note for someone else to action rather than checking
+    them. The reference-only pass was far too generous — 196 rows were proposed as Wimbledon, 174 as
+    Buckley, 55 as Domino's.
+    What the user said: _"I added image url in e column if by image wherever needed or verify by
+    image also but for where needed and where you Give enickname also verify"_
+    Right way: when a nickname depends on a dial, bezel or bracelet, the catalog image is the
+    evidence, and it has to be looked at — not deferred as a flag. Verify the confident
+    reference-level assignments against the image too; that is what caught Root Beer being
+    bezel-dependent, Bluesy being dial-dependent, the Batman/Batgirl bracelet split, and Leopard
+    belonging to only one of three refs. Of 928 proposals checked, 554 were rejected by the image.
+    Downloading the images and rendering labelled contact sheets makes reviewing ~900 of them
+    practical in one pass.
+
+45. **Answered "can I trust the rest?" only after the user asked, instead of labelling trust up front**
+    What Claude did: reported "290 image-confirmed" alongside 1,937 rows labelled
+    `Not image-checked - line-wide name`, in a way that read as a verdict rather than as "never
+    checked". The user had to ask twice — "So I can trust all those nicknames... right?" and then
+    "why were 1937 never checked?" — to find out that a third of the rows carrying a FinalNickname
+    had no evidence behind them at all.
+    What the user said: _"So all these can be seen in the watch image right? Then you may do one
+    thing you may see it and find from keyword search or so from the web oe everywatch website or
+    so."_
+    Right way: a result column must say what the evidence is, not just what the answer is, and rows
+    with no evidence must be visibly distinct from rows that passed a check. Where an image cannot
+    settle a name, the EveryWatch `watch` index is the ground truth — `watchTitle` is searchable and
+    shows exactly which references the market attaches a nickname to. That check found Thunderbird,
+    Rolesium, OysterQuartz and Bubbleback correct, and Ovettone on the wrong references entirely.
+
+46. **Built the Rolex nickname list without checking the project's own nickname source, `Data/data.py`**
+    What Claude did: researched Rolex nicknames from the web and from reasoning, and verified against
+    images and the EveryWatch index, but never looked in `Data/data.py` - which already held a
+    curated `nicknameArray` with 34 Rolex reference-to-nickname entries. The user had to point at it.
+    It then caught two real errors (`126619LB` is Cookie Monster, not Smurf; `6098` Ovettone has no
+    source behind it) and supplied names Claude did not have (Barilotto, Ovetto, Cookie Monster).
+    What the user said: _"Also in the data.py file, there is the list of reference numbers and its
+    nickname, you may find rolex nicknames there. Also, they might be having partial referncenumbers,
+    so you cannot simply say that all those refernces starting with them are all that only."_
+    Right way: check the repo's own data files before going to the web - `Data/` holds curated
+    reference data, not just sheet pointers. And a reference in such a list is a *base*: never
+    prefix-match it onto catalog refs. `1655` (Freccione) would have wrongly captured `16550`, a
+    different Explorer II generation. A `/` suffix extends the same reference; extra digits make a
+    different watch.
+
+47. **Put rows into the assignable set on source evidence alone, without opening the catalog image**
+    What Claude did: after adding nicknames from `Data/data.py`, EveryWatch listings and web
+    research, marked 15 rows `1 - ASSIGN` / `2 - ASSIGN` without ever looking at their catalog
+    image - `6105` Ovettone (11), `3130` Ovetto (2), `116598TBR` Eye of the Tiger (1),
+    `126619LB` Cookie Monster (1). The ImageCheck column even said "Confirmed by data.py + web
+    research", which reads like an image check but was not one.
+    What the user said: _"Also see to the images of watch as you cannot blindly trust all the refs
+    and assign them the nickname directly"_
+    Right way: a reference is never sufficient on its own, whatever the source says - the catalog
+    image is the last gate before a row becomes assignable. Nothing enters the assignable set
+    without it. The check vindicated all four names but also resolved four open groups: `6305` and
+    `6202` became assignable, `6098` and `3484` were rejected outright, and `3484` turned out to
+    carry a wrong model name in the catalog.
+
+48. **Put official model names, trademarks and dial signatures into the nickname list**
+    What Claude did: included COMEX, Tiffany Dial, Domino's, OysterQuartz, Turn-O-Graph, Rolesium
+    and Sea-Dweller 4000 as Rolex nicknames in `FinalNickname`. They are not collector slang -
+    the first three are dial signatures, the next two are official Rolex model names, Rolesium is a
+    Rolex trademark for the steel+platinum combination, and Sea-Dweller 4000 is a depth designation.
+    Claude had even flagged Turn-O-Graph and OysterQuartz as "arguably model designations" and then
+    left them in the assignable set anyway instead of resolving it.
+    What the user said: _"I verified these nicknames and I think ... these are not valid nicknames"_
+    Right way: a nickname is **collector slang the market invented**, not a name the manufacturer
+    gave the watch. Before a term enters the nickname list, ask which column it actually belongs to -
+    a dial signature goes to `DialStamp` / `tbl_CAT_DialStamp_d` (the pattern this repo already
+    documents for Tiffany), a model name to `tblModel`, a material trademark to a case attribute.
+    Flagging a doubt in prose is not the same as resolving it; the doubt has to change the data.
+
+49. **Padded the synonym list with spelling variants, abbreviations and descriptive phrases**
+    What Claude did: merged 34 "synonyms" into `FinalNickname` alongside the primary name. Most were
+    not nicknames at all - spelling variants (`Rootbeer`, `Bubble Back`, `Bombay`), abbreviations
+    (`DRSD`, `GV`, `POW`, `Red Sub`), official or descriptive terms (`Dato-Compax`, `Beta 21`,
+    `Military Submariner`, `100th Anniversary Le Mans`, `Frying Pan`, `Christmas Dial`), and names
+    belonging to a different watch (`James Bond` on both Big Crown and Small Crown, `Coke` on the
+    Fat Lady row). The user kept 12 of the 34.
+    What the user said: _"Also from the synonym nicknames I found these many only as valid"_ -
+    listing Bakelite, Pussy Galore, James Cameron, Platona, SD43, Honeycomb, Freccione, Barilotto,
+    Destro/Lefty, Cermit, Bubbles.
+    Right way: a synonym has to be a **distinct name the market uses for that same watch**, not
+    another way of spelling the primary, not an acronym of it, and not a description of its dial or
+    movement. Spelling and casing variants belong in matching/cleanup, not in the nickname list. The
+    user's cut also removed both name collisions Claude had flagged - evidence the looser rule was
+    producing them.

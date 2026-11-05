@@ -20,9 +20,9 @@ timestamp: 2026-11-04
 - `catalog_traceback_log.py` — appends change rows to the Catalog Traceback log. Used by the
   `/log-catalog-change` skill. Dry run unless `--write`; checks the header, snapshots the tab and
   flags duplicates before appending, then puts back the number formats the append drops.
-- `catalog_traceback_repair_format.py` — re-applies the Catalog Traceback dropdowns and
-  text/date formats to the data rows without touching values. Idempotent; use it if a row ever ends
-  up without its dropdowns.
+- `catalog_traceback_repair_format.py` — the one definition of how the Catalog Traceback data rows
+  look: dropdowns, text/date formats, per-column alignment, wrapping, row banding and the group
+  rules. Never touches values. Idempotent; run it after any bulk write or sheet rebuild.
 
 ## Note: two versions of `pick_best_image.py`
 

@@ -187,7 +187,7 @@ def sheet_id_of(service, tab):
 
 def reapply_formats(service, tab, first_row, last_row):
     """values.append drops userEnteredFormat.numberFormat on the rows it writes (it keeps
-    dataValidation). Put the TEXT and DATE formats back, so a later hand-edit of one of these
+    dataValidation). Put the TEXT and DATE formats, alignment and wrapping back, so a later hand-edit of one of these
     cells is not coerced into a date or a fraction."""
     sid = sheet_id_of(service, tab)
     reqs = []
@@ -200,6 +200,20 @@ def reapply_formats(service, tab, first_row, last_row):
                       "startColumnIndex": i, "endColumnIndex": i + 1},
             "cell": {"userEnteredFormat": {"numberFormat": nf}},
             "fields": "userEnteredFormat.numberFormat"}})
+    # alignment + wrap, same rules as catalog_traceback_repair_format.py: ids and statuses
+    # centred, names and free text left. Re-applied so a logged row can never land unformatted.
+    centre = {"Date", "CatalogId", "EnrichmentId", "ModelId", "MergedIntoId",
+              "Action", "Field", "Accept/Reject"}
+    for name in HEADERS:
+        i = HEADERS.index(name)
+        reqs.append({"repeatCell": {
+            "range": {"sheetId": sid,
+                      "startRowIndex": first_row - 1, "endRowIndex": last_row,
+                      "startColumnIndex": i, "endColumnIndex": i + 1},
+            "cell": {"userEnteredFormat": {
+                "horizontalAlignment": "CENTER" if name in centre else "LEFT",
+                "verticalAlignment": "MIDDLE", "wrapStrategy": "WRAP"}},
+            "fields": "userEnteredFormat(horizontalAlignment,verticalAlignment,wrapStrategy)"}})
     service.spreadsheets().batchUpdate(
         spreadsheetId=SPREADSHEET_ID, body={"requests": reqs}).execute()
     return len(reqs)

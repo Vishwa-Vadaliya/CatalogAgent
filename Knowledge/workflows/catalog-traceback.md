@@ -182,6 +182,11 @@ the row reads as clean to everyone who sees it later.
 - `valueInputOption="RAW"`. With `USER_ENTERED`, `5711/1A-010` becomes a date and `B1/M` a fraction.
 - Checks all 15 headers on row 2 before writing and aborts on any mismatch, rather than writing by
   column letter into a layout someone has shifted.
+- **Leaves every written row fully formatted.** `values.append` drops number formats, so the script
+  puts back TEXT/DATE, alignment (ids and statuses centred, names and free text left) and wrapping
+  on the rows it just wrote. A sheet the team reads is not finished when only the values are right.
+  `catalog_traceback_repair_format.py` applies the same standard — plus row banding and the group
+  rules — to the whole tab, for bulk writes or after a rebuild.
 - Snapshots the tab to `Output/Data/CatalogTraceback/Sheet2_before_<timestamp>.csv` first — that
   snapshot is the only undo.
 - Warns when a matching row already exists (same id, `Action`, `Field`, `OldValue`, `NewValue`).

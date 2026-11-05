@@ -1,0 +1,374 @@
+[
+ {
+  "Brand": "Audemars Piguet",
+  "CatalogId": "217141",
+  "ReferenceNumber": "12741",
+  "Action": "Renamed",
+  "Field": "ReferenceNumber",
+  "OldValue": "12741",
+  "NewValue": "14800BA",
+  "Reason": "12741 was a caseback number [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Audemars Piguet",
+  "CatalogId": "215761",
+  "ReferenceNumber": "2940OK.OO.D002CA.01",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Audemars Piguet",
+  "CatalogId": "216936",
+  "ReferenceNumber": "60301",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Invalid reference [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Speake-Marin",
+  "CatalogId": "235922",
+  "ReferenceNumber": "20003-51R",
+  "Action": "Merged",
+  "Field": "CatalogId",
+  "Reason": "Merged into PIC.20003-51 (235927) [migrated from Sheet1]",
+  "OldValue": "20003-51R",
+  "MergedIntoId": "235927"
+ },
+ {
+  "Brand": "Speake-Marin",
+  "CatalogId": "235954",
+  "ReferenceNumber": "414Z17040",
+  "Action": "Merged",
+  "Field": "CatalogId",
+  "Reason": "Merged into 414217040 (178776) [migrated from Sheet1]",
+  "OldValue": "414Z17040",
+  "MergedIntoId": "178776"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236236",
+  "ReferenceNumber": "WE60085G",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236272",
+  "ReferenceNumber": "W51036Q4",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236273",
+  "ReferenceNumber": "WG600012",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236275",
+  "ReferenceNumber": "W4CL0005",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236279",
+  "ReferenceNumber": "WGBB0019",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236289",
+  "ReferenceNumber": "W1555851",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236314",
+  "ReferenceNumber": "WJ11913G",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236320",
+  "ReferenceNumber": "WG40023J",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236456",
+  "ReferenceNumber": "W1001565",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236490",
+  "ReferenceNumber": "W10074F4",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236527",
+  "ReferenceNumber": "W1017454",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236601",
+  "ReferenceNumber": "W1527751",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236614",
+  "ReferenceNumber": "W1531951",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236616",
+  "ReferenceNumber": "W1532236",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236622",
+  "ReferenceNumber": "W153335",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236667",
+  "ReferenceNumber": "W1546551",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236672",
+  "ReferenceNumber": "W1551951",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236738",
+  "ReferenceNumber": "W250285A",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236781",
+  "ReferenceNumber": "W2605956",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "236859",
+  "ReferenceNumber": "W3102755",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "237023",
+  "ReferenceNumber": "W62008Y3",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "237102",
+  "ReferenceNumber": "WA201451",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "237117",
+  "ReferenceNumber": "WA301356",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "237217",
+  "ReferenceNumber": "WB5113D8",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "237466",
+  "ReferenceNumber": "WG200141",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "237624",
+  "ReferenceNumber": "WJ123221",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "237639",
+  "ReferenceNumber": "WJ200538",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "237677",
+  "ReferenceNumber": "WJCL0008",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "237687",
+  "ReferenceNumber": "WJHY0003",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "237741",
+  "ReferenceNumber": "WSBB0009",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "CatalogId": "237767",
+  "ReferenceNumber": "WSSA0078",
+  "Action": "Deleted",
+  "Field": "CatalogId",
+  "Reason": "Duplicate [migrated from Sheet1]"
+ },
+ {
+  "Brand": "Naoya Hida & Co.",
+  "ModelId": "2811",
+  "ModelName": "Type 1D-1",
+  "Action": "Deleted",
+  "Field": "ModelName",
+  "Reason": "[migrated from Sheet1]"
+ },
+ {
+  "Brand": "Naoya Hida & Co.",
+  "ModelId": "2815",
+  "ModelName": "Type 1D-2",
+  "Action": "Deleted",
+  "Field": "ModelName",
+  "Reason": "[migrated from Sheet1]"
+ },
+ {
+  "Brand": "Naoya Hida & Co.",
+  "ModelId": "2812",
+  "ModelName": "Type 2C-1",
+  "Action": "Deleted",
+  "Field": "ModelName",
+  "Reason": "[migrated from Sheet1]"
+ },
+ {
+  "Brand": "Ferdinand Berthoud",
+  "ModelId": "1011",
+  "ModelName": "FB 3",
+  "Action": "Deleted",
+  "Field": "ModelName",
+  "Reason": "[migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "ModelId": "3582",
+  "ModelName": "Ronde Louis",
+  "Action": "Deleted",
+  "Field": "ModelName",
+  "Reason": "[migrated from Sheet1]"
+ },
+ {
+  "Brand": "Cartier",
+  "ModelId": "3578",
+  "ModelName": "Paris",
+  "Action": "Deleted",
+  "Field": "ModelName",
+  "Reason": "[migrated from Sheet1]"
+ },
+ {
+  "Brand": "Audemars Piguet",
+  "ModelId": "1723",
+  "ModelName": "John Shaeffer",
+  "Action": "Renamed",
+  "Field": "ModelName",
+  "OldValue": "John Shaeffer",
+  "NewValue": "John Schaeffer",
+  "Reason": "[migrated from Sheet1]"
+ },
+ {
+  "Brand": "Felipe Pikullik",
+  "ModelId": "2806",
+  "ModelName": "Zifferblatt modell",
+  "Action": "Renamed",
+  "Field": "ModelName",
+  "OldValue": "Zifferblatt modell",
+  "NewValue": "Zifferblatt",
+  "Reason": "[migrated from Sheet1]"
+ },
+ {
+  "Brand": "Toledano & Chan",
+  "ModelId": "2886",
+  "ModelName": "B1/M",
+  "Action": "Renamed",
+  "Field": "ModelName",
+  "OldValue": "B1/M",
+  "NewValue": "B/1M",
+  "Reason": "[migrated from Sheet1]"
+ }
+]
