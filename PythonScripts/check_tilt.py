@@ -34,11 +34,14 @@ report.html            visual gallery of flagged images, worst first
 
 Usage
 -----
-  # from the Google Sheet (service account key):
-  python check_tilt.py --key "C:\\Users\\user\\Downloads\\quiet-radius-509511-c5-521e04a3da8b.json"
+  # from the Google Sheet (credentials come from GOOGLE_APPLICATION_CREDENTIALS):
+  python check_tilt.py --sheet
 
   # quick test on 200 rows:
-  python check_tilt.py --key "..." --limit 200
+  python check_tilt.py --sheet --limit 200
+
+  # override with a specific service-account key (rarely needed):
+  python check_tilt.py --key "C:\\path\\to\\other-key.json"
 
   # from a local CSV that has 'catalogid' and 'primaryimageurl' columns:
   python check_tilt.py --csv rows.csv
@@ -207,11 +210,17 @@ def draw_preview(img_rgb, geom, flag, angle, out_path, size=420):
 # --------------------------------------------------------------------------- #
 # Input
 # --------------------------------------------------------------------------- #
-def rows_from_sheet(key_path):
-    from google.oauth2 import service_account
+def rows_from_sheet(key_path=None):
+    """Read the sheet. key_path is optional: without it, credentials come from
+    GOOGLE_APPLICATION_CREDENTIALS (Application Default Credentials)."""
     from googleapiclient.discovery import build
-    creds = service_account.Credentials.from_service_account_file(
-        key_path, scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"])
+    scopes = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+    if key_path:
+        from google.oauth2 import service_account
+        creds = service_account.Credentials.from_service_account_file(key_path, scopes=scopes)
+    else:
+        from google.auth import default as google_default
+        creds, _ = google_default(scopes=scopes)
     svc = build("sheets", "v4", credentials=creds, cache_discovery=False)
     meta = svc.spreadsheets().get(spreadsheetId=SHEET_ID).execute()
     tab = meta["sheets"][0]["properties"]["title"]
@@ -323,7 +332,9 @@ def write_report(path, flagged):
 # --------------------------------------------------------------------------- #
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--key", help="service-account JSON key (reads the Google Sheet)")
+    ap.add_argument("--sheet", action="store_true",
+                    help="read the Google Sheet using GOOGLE_APPLICATION_CREDENTIALS")
+    ap.add_argument("--key", help="service-account JSON key overriding GOOGLE_APPLICATION_CREDENTIALS (implies --sheet)")
     ap.add_argument("--csv", help="local CSV with catalogid / primaryimageurl columns instead of the sheet")
     ap.add_argument("--images", nargs="+", help="check specific files/URLs directly")
     ap.add_argument("--out", default=r"D:\catalog_image_tilt_checker\output")
@@ -345,11 +356,11 @@ def main():
         rows = [{ID_COL: Path(s).name, URL_COL: s} for s in args.images]
     elif args.csv:
         rows = rows_from_csv(args.csv)
-    elif args.key:
+    elif args.sheet or args.key:
         print("Reading Google Sheet ...")
         rows = rows_from_sheet(args.key)
     else:
-        ap.error("give --key, --csv or --images")
+        ap.error("give --sheet, --key, --csv or --images")
     rows = rows[args.offset:]
     if args.limit:
         rows = rows[:args.limit]

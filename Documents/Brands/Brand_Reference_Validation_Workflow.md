@@ -20,7 +20,7 @@ but everything else below is standard operating procedure.
 ## Tooling setup (do this once per session)
 
 - Access is via the Google Sheets API using a service-account key
-  (`C:\Users\user\Downloads\quiet-radius-509511-c5-521e04a3da8b.json`), through Python
+  (`C:\Users\user\.secrets\ew-sheets-sa.json`), through Python
   (`google-api-python-client`, `google-auth`) — there is no native Sheets MCP tool.
 - Do all work from the session scratchpad directory. Never touch the local `ew-db`/Scripts
   repo for this — it's unrelated.

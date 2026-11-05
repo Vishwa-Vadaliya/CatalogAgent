@@ -8,7 +8,7 @@ timestamp: 2026-10-24
 
 # Cartier reference-number project — current state
 
-Work happens entirely via Python scripts calling the Google Sheets API (service account creds at `C:\Users\user\Downloads\quiet-radius-509511-c5-521e04a3da8b.json`), in the **second workbook**: `1IB6isLK_WiKOtiRAu6ouUEAkCJAgTt81seFQ85rvtn0`.
+Work happens entirely via Python scripts calling the Google Sheets API (service account creds at `C:\Users\user\.secrets\ew-sheets-sa.json`), in the **second workbook**: `1IB6isLK_WiKOtiRAu6ouUEAkCJAgTt81seFQ85rvtn0`.
 
 ## Key tabs and their roles
 - **All Refs final** — master per-ReferenceNumberId rollup (RefSource, ReferenceNumberId, RefName, watch counts, Top10WatchIds, ValidFlag, InCatalog, W-ref lists). **Column layout shifts frequently** as the user inserts/renames columns — always re-fetch headers by letter (`A1`, `B1`, ... one at a time) before writing, never trust positional array indexing. As of last check: O="W Refs" (combined list), P="Catalog Refs" (subset in catalog), Q="Non catalog refs", R/S/T=counts, U="Added from title & desc" (refs we appended that came from title&desc, not originally in O).

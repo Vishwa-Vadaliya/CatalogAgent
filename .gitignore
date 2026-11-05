@@ -3,3 +3,9 @@ __pycache__/
 .env
 credentials.json
 token.json
+
+# Service-account keys must never be committed. The real key lives outside the
+# repo and is found via the GOOGLE_APPLICATION_CREDENTIALS environment variable.
+*service-account*.json
+*-sa.json
+quiet-radius-*.json

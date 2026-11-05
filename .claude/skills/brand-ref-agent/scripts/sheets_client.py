@@ -5,23 +5,38 @@ import warnings
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-from google.oauth2 import service_account  # noqa: E402
+from google.auth import default as _google_default  # noqa: E402
+from google.auth.exceptions import DefaultCredentialsError  # noqa: E402
 from googleapiclient.discovery import build  # noqa: E402
 
 SPREADSHEET_ID = "1NhfXvAq1aOmpC_auLH_QkNFiIS5VPEvVaa_BfUz8bgg"
-KEY_PATH = r"C:\Users\user\Downloads\quiet-radius-509511-c5-521e04a3da8b.json"
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 CHUNK = 500
 NULLS = {"", "null", "none", "n/a"}
 
 _service = None
 
+_CREDS_HELP = (
+    "No Google credentials found. Set GOOGLE_APPLICATION_CREDENTIALS once (PowerShell), "
+    "then open a new terminal:\n"
+    "    [Environment]::SetEnvironmentVariable('GOOGLE_APPLICATION_CREDENTIALS', "
+    "'C:\\Users\\user\\.secrets\\ew-sheets-sa.json', 'User')"
+)
+
+
+def credentials(scopes=None):
+    """Application Default Credentials — the key path comes from the environment, never from code."""
+    try:
+        creds, _ = _google_default(scopes=scopes or SCOPES)
+    except DefaultCredentialsError as exc:
+        raise SystemExit(f"{_CREDS_HELP}\n\nUnderlying error: {exc}") from exc
+    return creds
+
 
 def service():
     global _service
     if _service is None:
-        creds = service_account.Credentials.from_service_account_file(
-            KEY_PATH, scopes=["https://www.googleapis.com/auth/spreadsheets"])
-        _service = build("sheets", "v4", credentials=creds, cache_discovery=False)
+        _service = build("sheets", "v4", credentials=credentials(), cache_discovery=False)
     return _service
 
 

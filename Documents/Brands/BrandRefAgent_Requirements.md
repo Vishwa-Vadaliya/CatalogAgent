@@ -26,7 +26,7 @@ new version automatically. Steps 3–6 below are new and are not covered by the 
 | Item | Value |
 |---|---|
 | Workbook | **RawRefsToAssign**, `1NhfXvAq1aOmpC_auLH_QkNFiIS5VPEvVaa_BfUz8bgg` |
-| Access | Google Sheets API via Python (`google-api-python-client`, `google-auth`), service-account key `C:\Users\user\Downloads\quiet-radius-509511-c5-521e04a3da8b.json` |
+| Access | Google Sheets API via Python (`google-api-python-client`, `google-auth`), service-account key `C:\Users\user\.secrets\ew-sheets-sa.json` |
 | Brand source tab | Created or named by the user, one tab per brand. Columns: `WatchId, ModelId, RawReferenceNumber, ModelName, ReferenceNumberId, ReferenceNumber, TotalWatchCount, '', FinalRef` |
 | Catalog refs | `Sheet4`. The user puts the brand's existing catalog refs in a column and says which one. |
 | Master values (DialColor / CaseMaterial / ModelName) | **TBD. The user will provide the link.** |

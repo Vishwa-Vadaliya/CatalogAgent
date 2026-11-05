@@ -15,9 +15,40 @@ Facts the agent needs that rarely change. If one of these moves, fix it here and
 | Item | Value |
 |---|---|
 | Workbook | **RawRefsToAssign**, `1NhfXvAq1aOmpC_auLH_QkNFiIS5VPEvVaa_BfUz8bgg` |
-| Service-account key | `C:\Users\user\Downloads\quiet-radius-509511-c5-521e04a3da8b.json` |
-| Script defaults | `SPREADSHEET_ID` / `KEY_PATH` in `scripts/sheets_client.py` |
+| Credentials | Application Default Credentials — **no key path in code or in the prompt**. See below. |
+| Script defaults | `SPREADSHEET_ID` in `scripts/sheets_client.py` |
 | Python | `python` (3.11). Packages listed in `scripts/requirements.txt` |
+
+### Credentials — never pass a key path
+
+Scripts get credentials from the `GOOGLE_APPLICATION_CREDENTIALS` environment variable, set once
+at the Windows **user** level, so it applies in every folder, terminal and session. Nothing needs
+to be told where the key is — not a script, not the agent.
+
+```python
+from google.auth import default
+creds, _ = default(scopes=["https://www.googleapis.com/auth/spreadsheets"])
+```
+
+`scripts/sheets_client.py` already does this via its `credentials()` helper; just call `service()`.
+
+| | |
+|---|---|
+| Env var | `GOOGLE_APPLICATION_CREDENTIALS` |
+| Current value | `C:\Users\user\.secrets\ew-sheets-sa.json` |
+| Service account | `mcp-sheets-services@quiet-radius-509511-c5.iam.gserviceaccount.com` |
+
+To point at a different service account, change the variable — not any file:
+
+```powershell
+[Environment]::SetEnvironmentVariable(
+    'GOOGLE_APPLICATION_CREDENTIALS', '<path to key>.json', 'User')
+```
+
+A new Google Sheet must be **shared with the service-account email above** before any script can
+read it. That is the usual cause of a 403 on a sheet that opens fine in the browser.
+
+The key file is a live credential: it lives outside every repo and must never be committed.
 
 ## Documents
 

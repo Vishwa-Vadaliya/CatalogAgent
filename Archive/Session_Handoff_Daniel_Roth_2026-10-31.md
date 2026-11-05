@@ -10,7 +10,7 @@ Reusable "brand reference agent" (skill `/brand-ref-agent`, folder `D:\EW\Script
 
 - Workbook RawRefsToAssign: `1NhfXvAq1aOmpC_auLH_QkNFiIS5VPEvVaa_BfUz8bgg`
 - Master values workbook: `1fNuS-iNetR3RYS2iMxyrb6ZgX0Ju4tb5ApsGQuhOy3A`
-- Access: Python + Sheets API, service-account key `C:\Users\user\Downloads\quiet-radius-509511-c5-521e04a3da8b.json`, helper `scripts/sheets_client.py` in the skill folder.
+- Access: Python + Sheets API, service-account key `C:\Users\user\.secrets\ew-sheets-sa.json`, helper `scripts/sheets_client.py` in the skill folder.
 - Spec: `D:\EW\Scripts\Queries\Vishva\requirements.md`. Method for Step 2: `D:\EW\Scripts\Queries\Vishva\Brand_Reference_Validation_Workflow.md`.
 
 **User's governing rule (always apply):** "IN CATALOG THE DATA SHOULD ALWAYS BE TRUE AND NO VARIATIONS SHOULD BE DUPLICATE."

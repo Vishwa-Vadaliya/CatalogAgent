@@ -38,7 +38,7 @@ warn_filter.filterwarnings("ignore", category=FutureWarning)
 
 CHECK_TILT_DIR = Path(r"D:\catalog_image_tilt_checker")
 sys.path.insert(0, str(CHECK_TILT_DIR))
-from google.oauth2 import service_account
+from google.auth import default as google_default
 from googleapiclient.discovery import build
 
 import cv2
@@ -48,7 +48,6 @@ from PIL import Image
 import check_tilt as ct
 
 SHEET_ID = "1NhfXvAq1aOmpC_auLH_QkNFiIS5VPEvVaa_BfUz8bgg"
-KEY_PATH = r"C:\Users\user\Downloads\quiet-radius-509511-c5-521e04a3da8b.json"
 N_URLS = 5
 NOT_WATCH_AT = 0.5                         # CLIP probability above which an image counts as box/non-watch
 RUNS_DIR = CHECK_TILT_DIR / "runs"
@@ -186,7 +185,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tab", required=True, help="final refs tab name")
     ap.add_argument("--sheet-id", default=SHEET_ID)
-    ap.add_argument("--key", default=KEY_PATH, help="service-account json")
+    ap.add_argument("--key", default=None,
+                    help="service-account json (optional; default = GOOGLE_APPLICATION_CREDENTIALS)")
     ap.add_argument("--first-url-col", default="X", help="column letter of the first of the 5 candidate URLs")
     ap.add_argument("--final-col", help="column letter to write into (default: found by header FinalImageUrl)")
     ap.add_argument("--ref-col", help="column letter of the reference (default: found by header, else A)")
@@ -204,8 +204,12 @@ def main():
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     scopes = ["https://www.googleapis.com/auth/spreadsheets"]
-    sv = build("sheets", "v4", cache_discovery=False,
-               credentials=service_account.Credentials.from_service_account_file(args.key, scopes=scopes))
+    if args.key:
+        from google.oauth2 import service_account
+        creds = service_account.Credentials.from_service_account_file(args.key, scopes=scopes)
+    else:
+        creds, _ = google_default(scopes=scopes)
+    sv = build("sheets", "v4", cache_discovery=False, credentials=creds)
     q = "'" + TAB.replace("'", "''") + "'"
 
     props = [s["properties"] for s in sv.spreadsheets().get(

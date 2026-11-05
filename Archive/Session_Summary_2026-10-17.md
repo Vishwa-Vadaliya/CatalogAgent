@@ -10,7 +10,7 @@ timestamp: 2026-10-24
 
 **Context:** Long-running, multi-brand watch-reference data-quality project, done entirely via
 Python scripts calling the Google Sheets API (service account creds at
-`C:\Users\user\Downloads\quiet-radius-509511-c5-521e04a3da8b.json`). All tabs worked on this
+`C:\Users\user\.secrets\ew-sheets-sa.json`). All tabs worked on this
 session live in workbook `1NhfXvAq1aOmpC_auLH_QkNFiIS5VPEvVaa_BfUz8bgg` (titled
 "RawRefsToAssign"). Reference material/plans live in `D:\EW\Scripts\Queries\Vishva\` —
 `Brand_Reference_Validation_Workflow.md` is the master methodology doc; each brand also has its
