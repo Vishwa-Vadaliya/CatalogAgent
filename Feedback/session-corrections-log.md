@@ -491,3 +491,12 @@ redirects (where you steered the approach, but nothing was actually broken).
     movement. Spelling and casing variants belong in matching/cleanup, not in the nickname list. The
     user's cut also removed both name collisions Claude had flagged - evidence the looser rule was
     producing them.
+
+50. **Pushed only part of the working tree when told to push "the changes"**
+    What Claude did: committed and pushed only the Catalog Traceback files and left four other
+    untracked items out (`Data/data.py`, `Output/Data/RolexNicknames/`, `Output/Documents/`,
+    `Output/Reports/2026-11-05-Team-Task-Landscape-and-Agent-Gaps.md`), deciding on its own that they
+    were not part of the work.
+    What the user said: _"No I want you to push all the catalogagent changes to git"_
+    Right way: when the user asks to push "the changes" for the repo, include everything in the
+    working tree; mention anything unexpected in one line, but don't silently exclude it.
