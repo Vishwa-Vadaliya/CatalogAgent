@@ -1,14 +1,15 @@
 ---
 name: retro-feedback
-description: Review the Feedback/session-corrections-log.md for recurring mistake patterns and propose permanent fixes (new rules in Rules/ or facts in Knowledge/). Use when asked to "run a retro", "review the feedback log", "do a corrections retro", or periodically to turn one-off corrections into standing rules.
+description: Review Feedback/session-corrections-log.md and Feedback/session-questions-log.md for recurring mistake and avoidable-question patterns, and propose permanent fixes (new rules in Rules/ or facts in Knowledge/). Use when asked to "run a retro", "review the feedback log", "do a corrections retro", "why does Claude keep asking X", or periodically to turn one-off corrections/questions into standing rules.
 tags: [skills, retro, feedback, rules, knowledge]
-timestamp: 2026-10-24
+timestamp: 2026-11-05
 ---
 
 # Retro Feedback
 
-Turns the append-only corrections log into permanent improvements, so mistakes
-caught once don't need to be caught again in every future session.
+Turns the append-only corrections log and questions log into permanent
+improvements, so mistakes caught once — and questions answered once — don't
+need to happen again in every future session.
 
 This skill is project-level (lives in this repo's `.claude/skills/`), so it
 works the same way for everyone who clones `CatalogBrain` — no per-person
@@ -23,7 +24,9 @@ install needed.
 
 ## Steps
 
-1. **Read the log.** Open [Feedback/session-corrections-log.md](../../../Feedback/session-corrections-log.md) in full.
+1. **Read both logs.** Open
+   [Feedback/session-corrections-log.md](../../../Feedback/session-corrections-log.md) and
+   [Feedback/session-questions-log.md](../../../Feedback/session-questions-log.md) in full.
 
 2. **Group entries by theme.** Don't treat each entry in isolation — look for
    patterns across entries, e.g.:
@@ -33,6 +36,9 @@ install needed.
    - The same kind of SQL mistake (syntax, join logic, windowing) recurring.
    - The same "design redirect" being suggested more than once (signals a
      preferred pattern that should be written down, not re-explained).
+   - The same **avoidable** question (session-questions-log.md) recurring —
+     signals a fact or rule that should be written down once so it stops
+     needing to be asked.
 
 3. **Classify each theme:**
    - **Actual mistakes** that recur → candidate for a new rule in
@@ -42,6 +48,13 @@ install needed.
    - **Design redirects** that recur → candidate for a documented pattern,
      either as a rule (if it's a hard preference) or a note in `Documents/`
      (if it's more of a guideline/example).
+   - **Avoidable questions** that recur, or that reveal a one-time-researched
+     fact worth keeping → candidate for a new fact in `Knowledge/` or
+     `Documents/` (the answer itself), and/or a rule in `Rules/00-core.md`
+     naming where to look before asking that question again.
+   - **Necessary questions** (session-questions-log.md) → not actionable by
+     themselves; only worth a Knowledge/ entry once the answer is known and
+     likely to be asked again (e.g. a researched mapping, once confirmed).
    - **One-off, non-recurring items** → leave as-is in the log; don't
      over-generalize a single occurrence into a standing rule.
 
@@ -53,10 +66,10 @@ install needed.
 
 5. **Mark promoted entries.** Once the user approves a rule/knowledge update
    for a given log entry (or group of entries), add a short `-> Promoted to
-   Rules/00-core.md (section X)` note next to that entry in
-   `Feedback/session-corrections-log.md`, so the log doesn't need to be
-   re-reviewed for the same item next time. Don't delete the original entry —
-   it's still useful history of what the mistake was and how it was caught.
+   Rules/00-core.md (section X)` note next to that entry in whichever log it
+   came from, so the log doesn't need to be re-reviewed for the same item
+   next time. Don't delete the original entry — it's still useful history of
+   what happened and how it was caught.
 
 6. **Keep scope tight.** This skill only reads/writes within
    `Feedback/`, `Rules/`, `Knowledge/`, and optionally `Documents/`. It never

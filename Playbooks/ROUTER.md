@@ -20,6 +20,7 @@ If nothing matches, say so and ask — don't improvise a playbook.
 | brand refs, reference validation, `RawRefsToAssign`, valid/invalid refs, ref structure, a brand name with "references" | [brand-refs.md](brand-refs.md) | `brand-ref-agent` skill |
 | new refs from raw, raw to catalog, `tbl_RAW_Catalog` → `tbl_CAT_Catalog_d`, staging, ECH-693 | [raw-to-catalog.md](raw-to-catalog.md) | |
 | "run a retro", review the feedback log, promote corrections into rules | the `retro-feedback` skill | |
+| "Enrichment/model says X but the listing says Y", a CMS admin link + public listing link, "is this right?" | [mismatch-check.md](mismatch-check.md) | |
 
 ## Always, whatever the playbook
 

@@ -22,6 +22,16 @@ timestamp: 2026-11-04
 - Watch attributes: `tblWatchToDialColor(_d)` → `tblColor`; `tblWatchToCaseMaterial(_d)` → `tblCaseMaterial` / `TblMaterial`; `TblWatchToBraceletMaterial_D` → `TblMaterial`.
 - Auction-house watches: `tblInfoSource.EventTypeId = 1`. Lot status: 2/4 = Sold, 1 = Active, 3 = Unsold. Full `LotStatusId` enum incl. the `5` human-edit guard (sync must never overwrite it) and the undocumented `6`: [conventions.md §6](conventions.md). `EventTypeId` has a crawl-side counterpart `SourceDataType` on `MAC_Sources` — see [conventions.md §7](conventions.md).
 
+## Field extraction & sourcing notes
+
+- WatchBase "Produced: YYYY" isn't always the production year — read the sentence where the year
+  reappears. Caliber introduction year ≠ ref year. Auction "Circa YYYY" = that watch only, not the ref.
+- Complication master values: one value per concept; position isn't a separate value; Time / Other /
+  Multifunction / Skeleton / Anti-magnetic aren't complications.
+- `SubDialCount` = 0 when there are no subdials (not NULL). Bezel color = color only (not bezel
+  material). Oyster ≠ President bracelet — don't conflate them.
+- rolex.com URLs carry the full ref (`m126000-0001` → `126000-0001`).
+
 ## See also
 
 - Staging rule before querying these tables: B8 in [../Rules/10-sql-style.md](../Rules/10-sql-style.md).

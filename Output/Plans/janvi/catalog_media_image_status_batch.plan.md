@@ -24,8 +24,6 @@ isProject: false
 
 # Catalog media image download status (single batch SP)
 
-**Canonical copy in workspace:** `d:\New folder\.cursor\plans\janvi\catalog_media_image_status_batch.plan.md`
-
 ## Confirmed decisions
 
 | # | Decision |

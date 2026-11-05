@@ -36,6 +36,15 @@ bureaucratize small asks.
 One line per decision, no retelling of the conversation. Skip it entirely when nothing in the task
 involved a judgment call.
 
+**Every time a non-trivial question gets asked** (AskUserQuestion, or a written "which do you want?"
+in chat) — append an entry to `Feedback/session-questions-log.md` without being asked, same as a
+correction: what was asked, why, and whether it was avoidable (answer already findable in `Rules/`,
+`Knowledge/`, `Documents/`, the schema, or earlier in the conversation) or necessary (real ambiguity,
+a decision only the user can make, or a fact that doesn't exist in the library yet). Skip trivial
+one-line disambiguations covered by the "skip for a trivial ask" clause above. The point is to catch
+**avoidable** questions — ones a missing or unread fact caused — so they can be fixed via
+`/retro-feedback` the same way recurring corrections are.
+
 ## A1. Execution & safety
 
 - **Never run a SQL query against any database yourself** — not via `sqlcmd`, `bcp`, Bash,
@@ -93,10 +102,13 @@ being deliberately updated.
 
 ## A3. Chat vs file
 
-- **"Give/write it here"** (meaning in the chat reply), or the user otherwise doesn't ask for a file
-  → paste the query/script directly in the chat message. Do **not** create a `.sql` file for it.
-- **Short queries (about 3–4 lines):** don't create a file — give them in the chat reply.
-- **Longer queries:** create a new `.sql` file per A2, without waiting to be asked.
+- **Default: save to a file.** Every new query/script is saved under `Output/Queries/<Person>/...`
+  per A2 — do this without waiting to be asked, regardless of length.
+- **Exception — "give/write it here"** (meaning in the chat reply): only when the user explicitly
+  says this (or equivalent) for that specific query, paste it directly in the chat message instead
+  and do **not** create a `.sql` file for it.
+- Still show the query text in chat either way, so the user can read it immediately — the file save
+  happens in addition to that, not instead of it.
 - If a file was already created for something that should have stayed chat-only, remove it rather
   than leaving an unwanted untracked file behind.
 
@@ -113,6 +125,9 @@ being deliberately updated.
 
 - Sheet → SQL loading: one `INSERT` formula per row. URL lists: split on `' || '`.
 - Sheets: keep old decision columns, add new ones beside them.
+- A sheet formula request: map the named header to its column letter, write one direct `IF`-based
+  formula, and give the matching `CREATE TABLE` alongside it. Skip escaping/validation logic the
+  request didn't call for (A7) unless asked.
 
 ## A6. `ew-db` repo & schema checks
 

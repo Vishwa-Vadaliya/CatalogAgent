@@ -31,6 +31,14 @@ redirects (where you steered the approach, but nothing was actually broken).
    restructure it into a separate grouped temp table joined back in.
    -> Promoted to Rules/EW_Rules.md (B11, no DISTINCT inside a windowed aggregate).
 
+3. **Chat-vs-file default was backwards, and the fix was first written to the wrong, older project**
+   I defaulted to pasting new queries in chat unless asked to save. You corrected it: save is
+   now the default, chat-only only when you explicitly say "give/write it here." I first wrote
+   that fix into a different, older project's rule file instead of here, then into that same
+   project's instruction file — you redirected both times: all rules belong under CatalogAgent,
+   with no other file or project depended on for them any more.
+   -> Promoted to Rules/00-core.md (A3). The older project's rule/instruction files were retired.
+
 ## Design redirects (not bugs -- you pointed me to a better approach)
 
 4. **Step 2c filtering logic (console.sql)**

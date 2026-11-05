@@ -22,9 +22,6 @@
       "Bash(sqlcmd:*)",
       "Bash(bcp:*)",
       "Bash(osql:*)",
-      "Write(D:\\EW\\EWScripts\\**)",
-      "Edit(D:\\EW\\EWScripts\\**)",
-      "Write(D:\\EW\\ew-db\\EveryWatchDDL\\**)",
       "Edit(D:\\EW\\ew-db\\EveryWatchDDL\\**)"
     ]
   },
