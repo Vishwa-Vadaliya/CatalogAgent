@@ -34,6 +34,7 @@ an entry; this is for questions that stopped real work.
    **Necessary** — no knowledge gap on my part to fix; the gap is that nickname work has no playbook
    row at all. Worth adding a `nickname` row to `ROUTER.md` once this task settles on a repeatable
    shape, so the next nickname task doesn't re-ask this.
+   -> Promoted: `nickname` row added to `ROUTER.md`, pointing at `Knowledge/workflows/nickname-assignment.md`.
 
 2. **Session 2026-11-05 — Rolex nickname task: where does the mapping come from?**
    Asked whether a reference->nickname mapping sheet already existed. Reason: searched
@@ -42,6 +43,8 @@ an entry; this is for questions that stopped real work.
    collector nickname. **Necessary** — this fact genuinely doesn't exist yet in the library; it has
    to be researched once, and the decision (reference-number-only vs. dial-text-assisted matching)
    is a design call the user confirmed.
+   -> Promoted: `Knowledge/workflows/nickname-assignment.md` (section 1) now names `Data/data.py`'s
+   `nicknameArray` as the first place to check, so this doesn't need re-discovering next time.
 
 ## See also
 

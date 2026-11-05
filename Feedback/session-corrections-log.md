@@ -242,6 +242,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     Right way: when building a raw-to-catalog match, read the existing mapping/override tables the
     current process uses (check `Knowledge/` and the existing map procedures) before designing the
     match, instead of comparing against the catalog table alone.
+    -> Already covered in `Playbooks/raw-to-catalog.md` (step 1, traps).
 
 26. **Used placeholder scenario thresholds in the FINAL SUMMARY instead of deriving them from the data**
     For the Cartier `FINAL SUMMARY` section 4 I typed thresholds 0.96 down to 0.83 as a guess (flagged
@@ -275,6 +276,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     execute and see the results."_
     Right way: for reporting/coverage in this flow, give a read-only script built on temp tables
     (B1) that the user runs in SSMS; do not create database views unless asked.
+    -> Promoted to `Rules/10-sql-style.md` (B11a, temp tables over views for reports).
 
 30. **Our scripts missed checks that Janvi's map procedure already does**
     Asked "did you compare our scripts and Janvi's?", the comparison showed our sync lacked the Rolex
@@ -283,6 +285,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     keep blank references use mirror also, keep #4 check also."_
     Right way: before writing a step that reads or cleans raw references, read the existing map
     procedure (`sp_map_rawCatalog_catalogCountry`) first and reuse its source filter and key cleaning.
+    -> Already covered in `Playbooks/raw-to-catalog.md` (step 2).
 
 31. **Left eleven sp_Create_Catalog fields unfilled without checking the raw table**
     I passed only the fields step 4 already fills and listed the other eleven as "not passed", asking
@@ -292,6 +295,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     Right way: when a target procedure has a parameter, look for the source column under another name in
     the raw table first, and give every such parameter a staging column (filled by step 4 or by Claude
     in the review) instead of dropping it.
+    -> Already covered in `Playbooks/raw-to-catalog.md` (step 3).
 
 32. **Wrote a plan only to the global user-level plans directory, not into the repo**
     Asked for a plan to build an agent out of this repo, I wrote it to
@@ -316,6 +320,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     keep three files for retail prices, keep one file only."_
     Right way: one file per topic the user actually names. Length alone is not a reason to split —
     a long topic gets headings inside one file, so a single open gives the whole picture.
+    -> Already covered in `Knowledge/index.md` ("House rules": split by sub-topic, never by length).
 
 35. **Named the copied documents folder "Reference" instead of keeping the known name**
     In the CatalogAgent plan I renamed `Documents/` to `Reference/` in the new agent folder. You
@@ -341,6 +346,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     Right way: a commit or push is a separate, deliberate action the user triggers each time.
     Finish the work, say it is ready, and leave it staged or uncommitted until asked. Approval for
     one push never carries to the next.
+    -> Already covered in `Rules/00-core.md` A1 (never commit/push without being asked).
 
 38. **Added columns the task didn't call for, one of them redundant with another column**
     In the Catalog Traceback structure I added `EntityType` (Catalog/Model/Enrichment) alongside
@@ -364,6 +370,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     that already carry the formatting. More generally — when a script writes into a sheet whose
     value is partly its formatting, verify the formatting survived the write, not just the values.
     I checked the written values and the header, and never re-checked validation.
+    -> Promoted to `Rules/00-core.md` A5 (OVERWRITE over INSERT_ROWS, verify formatting survived).
 
 40. **Built the skill to ask dense multi-part questions, and to verify through MCP without asking**
     The `/log-catalog-change` skill asked everything in one packed message — parsed-field table,
@@ -378,6 +385,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     plain answers between them. Verification is the user's choice, not a fixed step — ask whether to
     check the database, and if they say no, write the row straight to the sheet. Don't show SQL
     unless they have asked for the check.
+    -> Promoted to `Rules/00-core.md` A0a (one question at a time, MCQ, plain wording).
 
 41. **Wrote 45 rows into the sheet and left them badly formatted**
     After migrating Sheet1 into Sheet2 I checked the values, the dropdowns and the number formats,
@@ -389,6 +397,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     left-aligned, id and status columns centred, long text wrapped, and rows banded once there are
     more than a handful. Apply the full formatting as part of writing the data, not as a later fix,
     and keep it in the repeatable script so every future write lands formatted.
+    -> Promoted to `Rules/00-core.md` A5 (full formatting as part of the write).
 
 42. **Missed the "verify a catalog field" task family, and would have answered it from the DB alone**
     My task-landscape review grouped the team's work into 12 families and never identified the most
@@ -410,6 +419,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     gathered before any verdict is given. The answer is correct / incorrect / cannot determine, with
     the value it should be, the evidence behind it, and no verdict stated from memory. Any catalog
     field is in scope, not just reference numbers.
+    -> Promoted to `Rules/00-core.md` ("The job: decide, don't just surface data").
 
 43. **Assigned Rolex nicknames from the reference number alone, without checking the catalog image**
     What Claude did: mapped every Rolex catalog row to a nickname using only `ReferenceNumber`, and
@@ -425,6 +435,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     belonging to only one of three refs. Of 928 proposals checked, 554 were rejected by the image.
     Downloading the images and rendering labelled contact sheets makes reviewing ~900 of them
     practical in one pass.
+    -> Promoted to `Knowledge/workflows/nickname-assignment.md` (section 2).
 
 45. **Answered "can I trust the rest?" only after the user asked, instead of labelling trust up front**
     What Claude did: reported "290 image-confirmed" alongside 1,937 rows labelled
@@ -440,6 +451,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     settle a name, the EveryWatch `watch` index is the ground truth — `watchTitle` is searchable and
     shows exactly which references the market attaches a nickname to. That check found Thunderbird,
     Rolesium, OysterQuartz and Bubbleback correct, and Ovettone on the wrong references entirely.
+    -> Promoted to `Knowledge/workflows/nickname-assignment.md` (sections 3, 6).
 
 46. **Built the Rolex nickname list without checking the project's own nickname source, `Data/data.py`**
     What Claude did: researched Rolex nicknames from the web and from reasoning, and verified against
@@ -455,6 +467,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     prefix-match it onto catalog refs. `1655` (Freccione) would have wrongly captured `16550`, a
     different Explorer II generation. A `/` suffix extends the same reference; extra digits make a
     different watch.
+    -> Promoted to `Knowledge/workflows/nickname-assignment.md` (section 1).
 
 47. **Put rows into the assignable set on source evidence alone, without opening the catalog image**
     What Claude did: after adding nicknames from `Data/data.py`, EveryWatch listings and web
@@ -469,6 +482,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     without it. The check vindicated all four names but also resolved four open groups: `6305` and
     `6202` became assignable, `6098` and `3484` were rejected outright, and `3484` turned out to
     carry a wrong model name in the catalog.
+    -> Promoted to `Knowledge/workflows/nickname-assignment.md` (section 2).
 
 48. **Put official model names, trademarks and dial signatures into the nickname list**
     What Claude did: included COMEX, Tiffany Dial, Domino's, OysterQuartz, Turn-O-Graph, Rolesium
@@ -483,6 +497,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     a dial signature goes to `DialStamp` / `tbl_CAT_DialStamp_d` (the pattern this repo already
     documents for Tiffany), a model name to `tblModel`, a material trademark to a case attribute.
     Flagging a doubt in prose is not the same as resolving it; the doubt has to change the data.
+    -> Promoted to `Knowledge/workflows/nickname-assignment.md` (section 4).
 
 49. **Padded the synonym list with spelling variants, abbreviations and descriptive phrases**
     What Claude did: merged 34 "synonyms" into `FinalNickname` alongside the primary name. Most were
@@ -499,6 +514,7 @@ redirects (where you steered the approach, but nothing was actually broken).
     movement. Spelling and casing variants belong in matching/cleanup, not in the nickname list. The
     user's cut also removed both name collisions Claude had flagged - evidence the looser rule was
     producing them.
+    -> Promoted to `Knowledge/workflows/nickname-assignment.md` (section 5).
 
 50. **Pushed only part of the working tree when told to push "the changes"**
     What Claude did: committed and pushed only the Catalog Traceback files and left four other
@@ -508,3 +524,68 @@ redirects (where you steered the approach, but nothing was actually broken).
     What the user said: _"No I want you to push all the catalogagent changes to git"_
     Right way: when the user asks to push "the changes" for the repo, include everything in the
     working tree; mention anything unexpected in one line, but don't silently exclude it.
+
+51. **Wandered into EveryWatchDDL (app DB) routines for a task scoped to "catalog"**
+    For the FP Journe model-casing task, after reading the catalog's own `tbl_CAT_Model`/`tbl_CAT_Model_d`
+    schema (correct), Claude kept going and read `EveryWatchDDL/dbo/routine/sp_UT_RenameModel.sql` and
+    the ~1300-line `usp_SyncCatalogIdToAllMasters.sql` to understand how a catalog rename eventually
+    propagates to the app DB — none of which was needed to write the catalog-side fix itself.
+    What the user said: _"Whenever I say anything related to catalog, why are you going to every watch
+    ddl and checking SPs and all the things? It's all about changing the model names, like renaming the
+    model names in catalog. only need to check ewmaster for catalog related things"_
+    Right way: when the task says "catalog" (EWMaster), scope schema investigation to `MasterDB/` only.
+    Don't read `EveryWatchDDL/` routines to trace how a catalog change eventually syncs to the app DB —
+    that's downstream plumbing the user didn't ask about, not something the catalog-side fix needs.
+    Only cross into `EveryWatchDDL/` when the task itself names the app DB (EveryWatch) or asks how the
+    two databases interact.
+    -> Promoted to `Rules/00-core.md` A6 ("Stay inside the database the task names").
+
+52. **Defaulted to handing off a read-only diagnostic query instead of offering/using the MCP path**
+    For the FP Journe casing audit, Claude handed over a plain `SELECT` for the user to run in SSMS and
+    paste results back, rather than defaulting to the everywatch MCP `SELECT` path (with per-query
+    approval, per A1/MCP.md).
+    What the user said: _"No, no such type of things to take a decision or by the way. For making the
+    final update query, you can run as MCP, but with whatever rule is defined for MCP."_
+    Right way: for investigation/decision-gathering `SELECT`s, default to asking to run them through the
+    MCP (show the exact query, ask approval, run only on yes) rather than handing off a `.sql` file and
+    asking the user to paste results back. The handoff path is the fallback for when the user declines
+    or a query can't be expressed as a single MCP-safe condition (Playbooks/MCP.md parser limits), not
+    the default.
+    -> Already covered in `Rules/00-core.md` A1 / `Playbooks/MCP.md` (default-run-via-MCP wording).
+
+53. **Asked for per-query MCP approval on a routine, narrow diagnostic `SELECT`**
+    After being told (entry 52) to default to MCP over hand-off, Claude still stopped to ask "OK to run
+    this through the MCP now?" for a simple, narrowly-filtered lookup query.
+    What the user said: _"No, any major or big queries you should ask. This is very normal. You should
+    not ask."_
+    Right way: only pause for approval before running a `SELECT` through the MCP when the query is
+    major/big — broad/unfiltered scope, a very large expected result, or the query a final production
+    decision turns on. An ordinary narrow diagnostic lookup (like a single-brand model-name pull) runs
+    directly, no approval ask.
+    -> Promoted to `Rules/00-core.md` A1 and `Playbooks/MCP.md` (major/big-query approval boundary).
+
+54. **Clarification, not a correction of a mistake:** the "run without asking" relaxation (entry 53)
+    is `SELECT`-only. For `execute_procedure`/`INSERT`/`UPDATE`/`DELETE`/DDL through MCP the existing
+    absolute rule stands exactly as-is: never run, and don't even ask — hand off a script instead.
+    What the user said: _"For select only. For other queries, like executing or updating DDL, all
+    things: never run, never ask."_
+    -> Promoted to `Rules/00-core.md` A1 and `Playbooks/MCP.md` (writes/procedures never run, never
+    asked about, in either database).
+
+55. **Queried the draft table without a `StatusID` filter**
+    The FP Journe model audit against `tbl_CAT_Model_d` returned all rows regardless of `StatusID`,
+    including deleted ones (`StatusID = 3`, e.g. "Octa", "Octa Divine 36", "Chronomètre Furtif bleu").
+    What the user said: _"Always check things in the draft table and with the status ID condition.
+    Whenever you check anything in the draft table, use status ID."_
+    Right way: every query against a draft (`_d`) table filters `StatusID` (per the existing
+    `StatusID = 1` = Active convention, entry 6 above / Knowledge). Re-run the FP Journe audit with
+    `StatusID = 1`.
+    -> Promoted to `Rules/10-sql-style.md` (B11b, StatusID filter on every draft-table read).
+
+56. **Pasted the full query in chat as well as saving it to a file**
+    For the FP Journe casing-fix script, Claude both saved the `.sql` file and pasted the entire query
+    text again in the chat reply, per A3's "show it in chat either way" clause.
+    What the user said: _"If you've brought the query in the file, then no need to give the query in
+    this chat."_
+    Right way: when a query is saved to a file, don't also paste it in chat — point to the file.
+    -> Promoted to `Rules/00-core.md` A3 (removing the "show in chat either way" clause).

@@ -10,7 +10,16 @@ timestamp: 2026-11-04
 
 Classify the task, open the playbook, follow it. If the task matches more than one row, start with
 the **Jira ticket** row when there is a ticket, then route again on what the ticket actually asks for.
-If nothing matches, say so and ask — don't improvise a playbook.
+
+**If nothing in the table matches:** don't stop and ask just because no row fits. Instead —
+1. Search `D:\EW\ew-db` (see [../Knowledge/ew-db-repo.md](../Knowledge/ew-db-repo.md) for the folder
+   layout) for tables, views, SPs, or columns that relate to the task's own keywords — e.g. a
+   "nickname" task means grep the schema for `Nickname` columns/tables, not guess a playbook name.
+2. Use what that search turns up to scope the task, then do the work as an ordinary query/
+   investigation task under the core rules (A0 restate-and-confirm, A6 schema-check, A7 start simple).
+3. Only stop and ask if the schema search itself turns up nothing relevant, or the task stays
+   genuinely ambiguous after looking — i.e. ask because of what was *found* (or not found), not
+   because the router table had no row for it.
 
 | The task mentions… | Open | Also pulls in |
 |---|---|---|
@@ -22,6 +31,7 @@ If nothing matches, say so and ask — don't improvise a playbook.
 | catalog traceback, log a catalog change, "I renamed/deleted/merged" a ref, model or catalog row | the `log-catalog-change` skill | [../Knowledge/workflows/catalog-traceback.md](../Knowledge/workflows/catalog-traceback.md) |
 | "run a retro", review the feedback log, promote corrections into rules | the `retro-feedback` skill | |
 | "Enrichment/model says X but the listing says Y", a CMS admin link + public listing link, "is this right?" | [mismatch-check.md](mismatch-check.md) | |
+| assigning a collector nickname, nickname verification, "is this nickname valid" | [../Knowledge/workflows/nickname-assignment.md](../Knowledge/workflows/nickname-assignment.md) | |
 
 ## Always, whatever the playbook
 

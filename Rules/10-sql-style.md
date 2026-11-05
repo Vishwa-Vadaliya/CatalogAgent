@@ -145,6 +145,17 @@ This is a deliberate exception to B2 — the user asked for this pattern specifi
   else** — no other table, including image, reference-number and raw tables.
 - Do not add an `IsDeleted` condition to any other table unless the user explicitly asks.
 
+## B11a. Reporting/coverage scripts are temp-table scripts, not views
+
+- When the ask is a report or coverage check the user will run and read, give a script built on temp
+  tables (B1) — do not create a database view unless the user explicitly asks for one.
+
+## B11b. Filter `StatusID` on every draft-table read
+
+- Any table with a `StatusID` column (the `_d` draft tables) gets a `StatusID` filter on every read —
+  default `StatusID = 1` (Active) unless the task needs another status. An unfiltered read of a draft
+  table returns pending/deleted rows mixed in with active ones.
+
 ## B11. No `DISTINCT` inside a windowed aggregate
 
 - SQL Server does not allow `DISTINCT` inside an `OVER(...)` aggregate —

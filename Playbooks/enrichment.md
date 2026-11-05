@@ -33,7 +33,9 @@ than rebuilding it here.
    - Has an ENR → `TblWatchEnrichmentResults` (keyed on the **draft** WatchId).
    - No ENR → `tbl_RE_DiscardedWatch` (seek by WatchId, never scan by type).
    - Multiple ENR → `tbl_RE_DataToFix`, `ReferenceEnrichmentId IS NULL`, **no `IsFixed` filter**.
-4. **Agree the fix** with the user before writing an update script.
+4. **Decide the fix yourself** once the diagnosis is conclusive — don't pause to ask the user to
+   agree first. Only stop and ask if the evidence (data + image + signed/verified status) stays
+   genuinely ambiguous after checking it.
 5. **Write the fix** per B7: preview `SELECT` with an action flag, `BEGIN TRAN` with COMMIT/ROLLBACK
    commented out, a fresh TransactionId per B6. Draft tables only — publishing propagates
    ([../Knowledge/watches.md](../Knowledge/watches.md)). **No publish call in the file** (A9).

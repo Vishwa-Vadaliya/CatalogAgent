@@ -12,6 +12,30 @@ Always applied — this file is imported by `CLAUDE.md` and is in context from t
 SQL *style* rules live in [10-sql-style.md](10-sql-style.md); load that file for any task that
 writes SQL. Facts about the data live in [../Knowledge/index.md](../Knowledge/index.md).
 
+## The job: decide, don't just surface data
+
+For a review/correction task — "why is this enrichment missing", "this dial colour is wrong", "this
+case material is wrong", or any similar question — the end product is a **verdict and a final,
+ready-to-run query**, not a list of findings handed back for the user to interpret. Investigate it
+the way the user would: check the catalog/enrichment record, check the image, confirm the value is
+signed/verified, cross-check against master values — then say what's wrong, why, and hand over the
+exact script that fixes it (per B7, staged for the user to run).
+
+Ask only when something is genuinely blocking: the schema or `Knowledge/` doesn't have the fact
+needed, or the evidence stays ambiguous even after checking it. Don't ask when the answer is
+findable in `Rules/`, `Knowledge/`, `Documents/`, the schema, or earlier in the conversation — look
+it up instead. This doesn't relax A1's query-execution rule: when the next step needs data from the
+database, write the read-only query and ask the user to run it and share the result (or run it
+yourself through the MCP `SELECT` path with approval) — that back-and-forth is structural, not a
+judgment call, and isn't what this rule is about avoiding.
+
+A database read establishes **what we hold**, never **whether it is right**. A field verdict (is
+this ModelName / reference number / dial colour / case material *correct*?) needs external ground
+truth — the manufacturer site or official catalogue, auction-house lot listings, specialist sources,
+and the EveryWatch site / search index as a cross-check — gathered before giving a verdict. Never
+assert correct/incorrect from the database row alone, or from memory. The answer is
+correct / incorrect / cannot determine, with the value it should be and the evidence behind it.
+
 ## A0. Session requirement capture & end-of-task decision log
 
 **At the start of a task** — within the user's first 1–2 messages that contain a ticket, ask, or
@@ -45,6 +69,14 @@ one-line disambiguations covered by the "skip for a trivial ask" clause above. T
 **avoidable** questions — ones a missing or unread fact caused — so they can be fixed via
 `/retro-feedback` the same way recurring corrections are.
 
+## A0a. How to ask, when asking is necessary
+
+When a question does need asking (A1's "ask, don't assume" / A0's confirm-before-starting), ask it
+simply: one question at a time, not a dense message bundling context, a parsed table and the question
+together. Phrase it as multiple choice with a short free-text/"something else" option last, in plain,
+short wording — not an open-ended essay prompt. This applies to `AskUserQuestion` calls and to a
+written "which do you want?" in chat alike.
+
 ## A1. Execution & safety
 
 - **Never run a SQL query against any database yourself** — not via `sqlcmd`, `bcp`, Bash,
@@ -55,11 +87,15 @@ one-line disambiguations covered by the "skip for a trivial ask" clause above. T
     ready) so **they** run it in their own DB tool (SSMS, DataGrip, etc.) and share results back.
   - Applies to every database in scope (MasterDB, EveryWatchDDL, any other project database) and to
     read-only `SELECT` queries just as much as writes.
-  - **Exception — everywatch MCP (`mcp__everywatch__sql__*`), read-only `SELECT` only:** first show
-    the user the exact query and ask whether to run it through the MCP. Run it only after the user
-    says yes in reply to that specific ask; if they say no or don't answer, hand over the script.
-    Ask again for each new query — one approval doesn't cover later ones. Never run writes or
-    procedures (`INSERT`/`UPDATE`/`DELETE`/DDL/`execute_procedure`) through the MCP.
+  - **Exception — everywatch MCP (`mcp__everywatch__sql__query`), read-only `SELECT` only:** run it
+    directly, no approval ask, for an ordinary narrow query — a scoped diagnostic/investigation lookup
+    like "pull this brand's models" or "check this id." Only pause to ask first for a **major/big**
+    query — broad or unfiltered scope, a very large expected result, or the specific query a final
+    production decision turns on. If MCP access fails or the query can't be expressed as a single
+    MCP-safe condition, hand over the `.sql` script instead.
+  - **Writes and procedures are never run through the MCP, and never asked about either** —
+    `INSERT`/`UPDATE`/`DELETE`/DDL/`execute_procedure`, in both databases. Not "ask first," not
+    "only if approved" — write the script and hand it to the user, full stop, every time.
   - **Carve-out — `/log-catalog-change` only:** that skill may bundle the lookups for **one** logged
     change (or one batch) into a single approval, provided every query is shown **verbatim** in that
     one ask. It covers only that skill's fixed-shape record lookups, and only for the change being
@@ -125,8 +161,8 @@ being deliberately updated.
 - **Exception — "give/write it here"** (meaning in the chat reply): only when the user explicitly
   says this (or equivalent) for that specific query, paste it directly in the chat message instead
   and do **not** create a `.sql` file for it.
-- Still show the query text in chat either way, so the user can read it immediately — the file save
-  happens in addition to that, not instead of it.
+- **When a query is saved to a file, don't also paste the full text in chat.** Point to the file path
+  instead — repeating it in chat is redundant, not a courtesy.
 - If a file was already created for something that should have stayed chat-only, remove it rather
   than leaving an unwanted untracked file behind.
 
@@ -146,6 +182,13 @@ being deliberately updated.
 - A sheet formula request: map the named header to its column letter, write one direct `IF`-based
   formula, and give the matching `CREATE TABLE` alongside it. Skip escaping/validation logic the
   request didn't call for (A7) unless asked.
+- **Appending rows:** use the default `OVERWRITE` write mode, not `INSERT_ROWS`. `INSERT_ROWS` inserts
+  fresh rows that don't inherit the range's existing data validation (dropdowns) or number formats
+  (e.g. a TEXT-formatted column reverting to a number); `OVERWRITE` lands in existing formatted grid
+  rows instead. After writing, verify the formatting survived, not just the values.
+- **A sheet the team reads needs full formatting as part of the write, not fixed afterward:**
+  left-align text columns, center id/status columns, wrap long text, and band rows once there are
+  more than a handful.
 
 ## A6. `ew-db` repo & schema checks
 
@@ -157,6 +200,11 @@ Folder layout: [../Knowledge/ew-db-repo.md](../Knowledge/ew-db-repo.md).
   datatypes and indexes. Don't assume them.
   - Check that any SP, function or view you reference exists in the correct DB folder.
   - If a column or table is not found, say so explicitly — do not assume it exists.
+- **Stay inside the database the task names.** "Catalog" means EWMaster, schema investigation stays
+  in `MasterDB/`; "app"/"EveryWatch" means `EveryWatchDDL/`. Don't read the other database's
+  routines or sync jobs (e.g. how a catalog change eventually propagates to the app DB) unless the
+  task itself names the app DB or asks how the two databases interact — that's downstream plumbing,
+  not something a same-database fix needs.
 - **Never modify any file inside `D:\EW\ew-db`** unless the user explicitly says to change the
   `ew-db` project. If a change seems needed, ask first. Applies to all files.
 - **Edit scope once `ew-db` changes are requested:**
