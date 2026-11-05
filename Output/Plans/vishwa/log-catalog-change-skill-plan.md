@@ -218,7 +218,7 @@ column, so without this the warning dies in the chat transcript and the row read
 | `Playbooks/ROUTER.md` | New row: "catalog traceback, log a catalog change, renamed/deleted/merged a ref or model" → the skill. |
 | `Skills/index.md` | Entry for `/log-catalog-change`. |
 | `PythonScripts/index.md` | Add `catalog_traceback_log.py`, plus `google_auth.py` and `catalog_traceback_setup.py` — **both added this session and currently missing from the index.** |
-| `Knowledge/references-and-models.md` | **Correction found while exploring:** it describes `tbl_RE_ReferenceEnrichment` as keyed only on the watch side; it in fact has a `catalogId` column giving a direct catalog→enrichment link. `Knowledge/enrichment.md` line 13 has the same gap. Proposed separately, not part of this build. |
+| `Knowledge/enrichment.md` | **Correction found while exploring, now applied (2026-11-05):** it described `tbl_RE_ReferenceEnrichment` as keyed only on the watch side; it in fact has a `catalogId` column giving a direct catalog→enrichment link, used by `sp_Get_CatalogDetails`. *(An earlier draft of this plan also named `references-and-models.md` — that was wrong, it does not mention the table.)* |
 
 ---
 
