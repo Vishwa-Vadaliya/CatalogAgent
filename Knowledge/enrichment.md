@@ -11,6 +11,19 @@ timestamp: 2026-11-04
 # Enrichment (ENR, EveryWatch)
 
 - `tblWatch.ReferenceEnrichmentId` = assigned ENR. `tbl_RE_ReferenceEnrichment` (ReferenceEnrichmentId, ReferenceNumberId, ManufacturerId, EntityStatusId — 2 = published).
+  - **It also has a `catalogId` column — a direct catalog → enrichment link.** Don't route through
+    the watch side when you have a `CatalogId`; `sp_Get_CatalogDetails` joins it straight:
+    `LEFT JOIN EveryWatch.dbo.tbl_RE_ReferenceEnrichment tRRE WITH (NOLOCK) ON tRRE.CatalogId = cat.CatalogId`.
+    The table has ~40 columns, not the four listed above — also `CatalogTransactionId`,
+    `GlobalRuleId`, `ModelId`, `CatalogNotes`, `RefProductionStatusId` and more.
+  - Caveats on that link: `re.CatalogId` is **frequently NULL** (enrichments created outside catalog
+    seeding), it is **not unique** — one catalog row can map to several enrichments — and no FK
+    backs it, since it crosses databases. Treat the join as 1→0..N and guard for NULL.
+  - The table lives in **EveryWatch**, not EWMaster — always prefix `EveryWatch.dbo.`. It is outside
+    the MCP grant, so it cannot be read or described through the MCP.
+  - Source: the `ew-db` DDL (`EveryWatchDDL/dbo/table/tbl_RE_ReferenceEnrichment.sql`) and the
+    production routines that use it, confirmed 2026-11-05. **Not** verified against the live
+    database — a `describe` on it is not granted.
 - `TblWatchEnrichmentResults` (WatchId = draft id) = watches that **got** an ENR and how: EnrichmentTypeId, ImageMatchScore, MatchConfidence, MatchingWatchDraftId. No ReferenceEnrichmentId column.
 - `tbl_RE_DiscardedWatch` (~9.27M rows) = candidates for watches that did **not** get an ENR. Unique index (WatchId, ReferenceEnrichmentType) → start from filtered `tblWatch_d` and seek by WatchId; never scan by type first.
 - EnrichmentTypeId (`tbl_RE_ReferenceEnrichmentType`): 1 = Image Similarity, 2 = Longest Reference, 3 = Core Fields, 4 = Longest-Ref Rule + Image, 5 = Manufacturer-Wide Image Match, 6 = User/Manually Assigned, 7 = cross-manufacturer image (?).

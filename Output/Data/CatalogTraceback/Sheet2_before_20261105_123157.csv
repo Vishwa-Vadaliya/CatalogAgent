@@ -1,0 +1,3 @@
+LOG ENTRY,,,CATALOG,,,MODEL,,CHANGE,,,,,,REVIEW
+Date,ChangedBy,Brand,CatalogId,ReferenceNumber,EnrichmentId,ModelId,ModelName,Action,Field,OldValue,NewValue,MergedIntoId,Reason,Accept/Reject
+2026-11-05,Vishva,Audemars Piguet,217141,12741,,,,Renamed,ReferenceNumber,12741,14800BA,,got its full ref,Pending

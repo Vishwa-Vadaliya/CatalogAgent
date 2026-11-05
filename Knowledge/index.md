@@ -28,6 +28,7 @@ Open the one file the keyword points at — not the whole folder.
 | where a table's DDL lives, the schema check before writing a query | [ew-db-repo.md](ew-db-repo.md) |
 | the four data layers, `MA_Id` writeback, synonym resolution, lot-status lifecycle, live-vs-scratch naming | [conventions.md](conventions.md) |
 | reviewing a brand's image match (type 5) and multiple-ENR (type 1) | [workflows/image-match-review.md](workflows/image-match-review.md) |
+| logging a catalog rename / delete / merge, catalog traceback, the change log | [workflows/catalog-traceback.md](workflows/catalog-traceback.md) |
 
 ## By database
 

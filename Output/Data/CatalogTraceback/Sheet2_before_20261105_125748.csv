@@ -1,0 +1,47 @@
+LOG ENTRY,,,CATALOG,,,MODEL,,CHANGE,,,,,,REVIEW
+Date,ChangedBy,Brand,CatalogId,ReferenceNumber,EnrichmentId,ModelId,ModelName,Action,Field,OldValue,NewValue,MergedIntoId,Reason,Accept/Reject
+2026-11-05,,Audemars Piguet,217141,12741,,,,Renamed,ReferenceNumber,12741,14800BA,,12741 was a caseback number [migrated from Sheet1],Pending
+2026-11-05,,Audemars Piguet,215761,2940OK.OO.D002CA.01,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Audemars Piguet,216936,60301,,,,Deleted,CatalogId,,,,Invalid reference [migrated from Sheet1],Pending
+2026-11-05,,Speake-Marin,235922,20003-51R,,,,Merged,CatalogId,20003-51R,,235927,Merged into PIC.20003-51 (235927) [migrated from Sheet1],Pending
+2026-11-05,,Speake-Marin,235954,414Z17040,,,,Merged,CatalogId,414Z17040,,178776,Merged into 414217040 (178776) [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236236,WE60085G,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236272,W51036Q4,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236273,WG600012,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236275,W4CL0005,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236279,WGBB0019,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236289,W1555851,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236314,WJ11913G,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236320,WG40023J,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236456,W1001565,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236490,W10074F4,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236527,W1017454,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236601,W1527751,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236614,W1531951,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236616,W1532236,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236622,W153335,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236667,W1546551,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236672,W1551951,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236738,W250285A,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236781,W2605956,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,236859,W3102755,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,237023,W62008Y3,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,237102,WA201451,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,237117,WA301356,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,237217,WB5113D8,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,237466,WG200141,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,237624,WJ123221,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,237639,WJ200538,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,237677,WJCL0008,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,237687,WJHY0003,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,237741,WSBB0009,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Cartier,237767,WSSA0078,,,,Deleted,CatalogId,,,,Duplicate [migrated from Sheet1],Pending
+2026-11-05,,Naoya Hida & Co.,,,,2811,Type 1D-1,Deleted,ModelName,,,,[migrated from Sheet1],Pending
+2026-11-05,,Naoya Hida & Co.,,,,2815,Type 1D-2,Deleted,ModelName,,,,[migrated from Sheet1],Pending
+2026-11-05,,Naoya Hida & Co.,,,,2812,Type 2C-1,Deleted,ModelName,,,,[migrated from Sheet1],Pending
+2026-11-05,,Ferdinand Berthoud,,,,1011,FB 3,Deleted,ModelName,,,,[migrated from Sheet1],Pending
+2026-11-05,,Cartier,,,,3582,Ronde Louis,Deleted,ModelName,,,,[migrated from Sheet1],Pending
+2026-11-05,,Cartier,,,,3578,Paris,Deleted,ModelName,,,,[migrated from Sheet1],Pending
+2026-11-05,,Audemars Piguet,,,,1723,John Shaeffer,Renamed,ModelName,John Shaeffer,John Schaeffer,,[migrated from Sheet1],Pending
+2026-11-05,,Felipe Pikullik,,,,2806,Zifferblatt modell,Renamed,ModelName,Zifferblatt modell,Zifferblatt,,[migrated from Sheet1],Pending
+2026-11-05,,Toledano & Chan,,,,2886,B1/M,Renamed,ModelName,B1/M,B/1M,,[migrated from Sheet1],Pending
